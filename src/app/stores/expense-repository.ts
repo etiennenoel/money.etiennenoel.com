@@ -1,8 +1,12 @@
+import { Injectable } from '@angular/core';
 import { Expense } from '../interfaces/expense.interface';
 
 const DB_NAME = 'ExpenseDB';
 const STORE_NAME = 'expenses';
 
+@Injectable({
+  providedIn: 'root',
+})
 export class ExpenseRepository {
   private dbPromise: Promise<IDBDatabase>;
 
