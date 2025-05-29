@@ -11,6 +11,7 @@ import {IndexComponent} from './pages/index/index.component';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
 import { ExpenseList } from './pages/expense-list/expense-list';
+import {ExpenseRepository} from './stores/expense-repository';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,9 @@ import { ExpenseList } from './pages/expense-list/expense-list';
   ],
   providers: [
     provideClientHydration(withEventReplay()),
+
+    // Repositories
+    ExpenseRepository,
 
     ToastStore,
   ],

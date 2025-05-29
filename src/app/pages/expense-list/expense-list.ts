@@ -6,7 +6,8 @@ import { MOCK_EXPENSES } from '../../stores/mock-expenses';
 @Component({
   selector: 'app-expense-list',
   templateUrl: './expense-list.html',
-  styleUrl: './expense-list.scss'
+  styleUrl: './expense-list.scss',
+  standalone: false,
 })
 export class ExpenseList implements OnInit {
   public allExpenses: Expense[] = []; // Stores all expenses
@@ -57,7 +58,9 @@ export class ExpenseList implements OnInit {
     if (!this.currentSortColumn || !this.expenses) return;
 
     this.expenses.sort((a, b) => {
+      // @ts-ignore
       const valA = a[this.currentSortColumn!];
+      // @ts-ignore
       const valB = b[this.currentSortColumn!];
       let comparison = 0;
 
