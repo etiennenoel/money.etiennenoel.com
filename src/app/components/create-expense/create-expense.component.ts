@@ -8,6 +8,7 @@ import { Expense } from '../../../interfaces/expense.interface';
   selector: 'app-create-expense',
   templateUrl: './create-expense.component.html',
   // styleUrls: ['./create-expense.component.css'] // Assuming you might add styles later
+  standalone: false,
 })
 export class CreateExpenseComponent implements OnInit {
   expenseForm!: FormGroup;
@@ -55,7 +56,7 @@ export class CreateExpenseComponent implements OnInit {
         this.toastStore.showToast('Expense created successfully!');
         this.expenseForm.reset();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.toastStore.showToast('Error creating expense.', 'error');
         console.error('Error creating expense:', error);
       }
