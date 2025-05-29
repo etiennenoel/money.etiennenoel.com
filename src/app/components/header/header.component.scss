@@ -1,0 +1,13 @@
+.app-header {
+  height: 100%; // To fill the allocated space in the layout
+  display: flex;
+  align-items: center;
+  padding: 0 20px; // Horizontal padding
+  background-color: var(--header-bg); // Use variable from global styles
+  color: var(--text-dark); // Use dark text color
+
+  .header-title {
+    font-size: 1.25rem; // Example size
+    font-weight: 600; // Semi-bold
+  }
+}
