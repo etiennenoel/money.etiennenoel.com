@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ExpenseRepository } from '../../../stores/expense-repository';
-import { ToastStore } from '../../../stores/toast.store';
-import { Expense } from '../../../interfaces/expense.interface';
+import { ExpenseRepository } from '../../stores/expense-repository';
+import { ToastStore } from '../../stores/toast.store';
+import { Expense } from '../../interfaces/expense.interface';
 
 @Component({
   selector: 'app-create-expense',
   templateUrl: './create-expense.component.html',
-  // styleUrls: ['./create-expense.component.css'] // Assuming you might add styles later
   standalone: false,
 })
 export class CreateExpenseComponent implements OnInit {
