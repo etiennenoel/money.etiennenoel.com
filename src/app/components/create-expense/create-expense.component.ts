@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ExpenseRepository } from '../../stores/expense-repository';
 import { ToastStore } from '../../stores/toast.store';
 import { Expense } from '../../interfaces/expense.interface';
+import { ToastMessageInterface } from '../../interfaces/toast-message.interface';
 
 @Component({
   selector: 'app-create-expense',
@@ -50,16 +51,25 @@ export class CreateExpenseComponent implements OnInit {
       labels: labels,
     };
 
-    this.expenseRepository.create(expenseData).subscribe({
-      next: () => {
-        this.toastStore.showToast('Expense created successfully!');
+    this.expenseRepository.create(expenseData)
+      .then((createdExpense) => { // 'createdExpense' is the resolved value from the Promise
+        // Success logic
+        this.toastStore.publish({ message: 'Expense created successfully!' });
         this.expenseForm.reset();
-      },
-      error: (error: any) => {
-        this.toastStore.showToast('Error creating expense.', 'error');
+        // Optionally, re-enable the submit button or clear markings here if needed
+        Object.keys(this.expenseForm.controls).forEach(key => {
+          this.expenseForm.get(key)?.clearValidators(); // Or reset specific properties
+          this.expenseForm.get(key)?.updateValueAndValidity();
+          this.expenseForm.get(key)?.setErrors(null);
+          this.expenseForm.get(key)?.markAsPristine();
+          this.expenseForm.get(key)?.markAsUntouched();
+        });
+      })
+      .catch((error: any) => {
+        // Error logic
+        this.toastStore.publish({ message: 'Error creating expense.' });
         console.error('Error creating expense:', error);
-      }
-    });
+      });
   }
 
   private markAllAsTouched(): void {
