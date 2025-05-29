@@ -56,13 +56,14 @@ export class CreateExpenseComponent implements OnInit {
         // Success logic
         this.toastStore.publish({ message: 'Expense created successfully!' });
         this.expenseForm.reset();
-        // Optionally, re-enable the submit button or clear markings here if needed
+        // Optional: Full form reset logic previously included
         Object.keys(this.expenseForm.controls).forEach(key => {
-          this.expenseForm.get(key)?.clearValidators(); // Or reset specific properties
-          this.expenseForm.get(key)?.updateValueAndValidity();
-          this.expenseForm.get(key)?.setErrors(null);
-          this.expenseForm.get(key)?.markAsPristine();
-          this.expenseForm.get(key)?.markAsUntouched();
+          const control = this.expenseForm.get(key);
+          control?.clearValidators();
+          control?.updateValueAndValidity();
+          control?.setErrors(null);
+          control?.markAsPristine();
+          control?.markAsUntouched();
         });
       })
       .catch((error: any) => {
