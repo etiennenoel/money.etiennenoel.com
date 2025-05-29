@@ -5,8 +5,8 @@ import { MOCK_EXPENSES } from '../../stores/mock-expenses';
 
 @Component({
   selector: 'app-expense-list',
-  templateUrl: './expense-list.html',
-  styleUrl: './expense-list.scss',
+  templateUrl: './expense-list.page.html',
+  styleUrl: './expense-list.page.scss',
   standalone: false,
 })
 export class ExpenseList implements OnInit {

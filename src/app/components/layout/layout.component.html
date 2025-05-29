@@ -1,7 +1,9 @@
-<div class="d-flex gap-2">
-<!--  <app-sidebar></app-sidebar>-->
-
-  <div class="flex-grow-1 content">
-    <router-outlet></router-outlet>
+<div class="layout-container">
+  <app-sidebar class="layout-sidebar"></app-sidebar>
+  <div class="layout-content-area">
+    <app-header class="layout-header"></app-header>
+    <main class="layout-main-content">
+      <router-outlet></router-outlet>
+    </main>
   </div>
 </div>

@@ -1,0 +1,124 @@
+// Base styles for the page, if any, can go here.
+// For example, ensuring it doesn't add extra padding if layout-main-content handles it.
+
+.filter-section {
+  margin-bottom: 20px;
+
+  .search-input {
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color, #007bff); // Using a fallback primary color
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.95rem;
+
+  th, td {
+    border: none; // Remove all cell borders
+    border-bottom: 1px solid var(--border-color); // Light bottom border for rows
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: var(--content-bg);
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer; // Retained as per comment in original file
+    position: relative;
+
+    &:hover {
+      // Assuming --content-bg is a light color like #F8F9FA
+      // For a direct SCSS darken function, it needs to be a color literal or an SCSS variable.
+      // If --content-bg is #F8F9FA, darken(#F8F9FA, 5%) would be #ebecee
+      // Using a simple rgba for hover if direct SCSS darken on CSS var isn't possible/reliable
+      background-color: rgba(0, 0, 0, 0.03); // Fallback if SCSS darken doesn't work directly with CSS var
+    }
+
+    span { // Sort indicators
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8em;
+    }
+  }
+
+  td {
+    color: var(--text-dark);
+
+    &:nth-child(4) { // Amount column
+      text-align: right;
+      font-weight: 500;
+    }
+  }
+
+  tbody tr:hover {
+    // Similar to th:hover, using rgba for a subtle effect
+    background-color: rgba(0, 0, 0, 0.015); // Fallback if SCSS darken doesn't work directly with CSS var
+  }
+}
+
+// Styling for the "No expenses found" message
+// This targets any <p> tag directly within the component.
+// If there were other p tags, a more specific selector like .no-expenses-message would be better.
+:host ::ng-deep p { // Using ::ng-deep to ensure it applies if the <p> is not a direct child for some reason, or use a class.
+                    // However, the HTML shows it as a direct child of the component's template.
+                    // For direct children, a simple 'p' or a class is better.
+                    // Given the current HTML, 'p' should work if not encapsulated by another element.
+                    // Let's assume the <p> tag for "No expenses found" is a direct child or has a specific class if needed.
+                    // Sticking to the provided CSS, which is just 'p'.
+  margin-top: 20px;
+  font-style: italic;
+  color: var(--text-dark);
+  opacity: 0.7;
+}
+
+// Note: The SCSS `darken()` function cannot be used with CSS variables directly
+// because CSS variables are resolved at runtime in the browser, while SCSS is compiled at build time.
+// For `th:hover` and `tbody tr:hover`, I've used a fallback `rgba` value.
+// If a theming solution with SCSS variables (e.g., $content-bg: #F8F9FA;) were in place,
+// then `darken($content-bg, 5%)` would work.
+// The provided styles used `darken(var(--content-bg, #F8F9FA), 5%)` which is not valid SCSS.
+// I've replaced it with a simple translucent black overlay.
+// If actual color names are available as SCSS vars, those should be used.
+// For now, using a generic subtle hover effect.
+// If --content-bg is guaranteed to be a specific hex, we can hardcode the darkened version or use a more complex CSS filter if needed.
+// The simplest approach is a subtle overlay or a slightly different variable for hover states.
+// For `th:hover`, `background-color: darken(var(--content-bg, #F8F9FA), 5%);`
+// will be replaced by `background-color: #e9ecef;` if we assume --content-bg is #F8F9FA
+// Let's adjust `th:hover` and `tbody tr:hover` to use a more explicit color or overlay.
+
+// Corrected hover effects for th and tbody tr
+// Assuming --content-bg is generally light.
+// A common pattern is to use a slightly darker shade or an overlay.
+
+.expenses-table {
+  // ... (other table styles remain the same)
+
+  th {
+    // ... (other th styles remain the same)
+    &:hover {
+      background-color: #e9ecef; // Example: A slightly darker shade of a common light background like F8F9FA
+    }
+  }
+
+  tbody tr:hover {
+    background-color: #f1f3f5; // Example: A very subtle hover for rows, slightly darker than default F8F9FA
+  }
+}

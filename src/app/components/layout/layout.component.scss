@@ -1,4 +1,31 @@
-.content {
+.layout-container {
+  display: flex;
   height: 100vh;
-  overflow: auto;
+}
+
+.layout-sidebar {
+  width: 250px; // Or your desired fixed sidebar width
+  background-color: var(--sidebar-bg); // Using variable defined in global styles
+  color: var(--text-light);
+  flex-shrink: 0; // Sidebar width should not shrink
+}
+
+.layout-content-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--content-bg); // Using variable
+}
+
+.layout-header {
+  height: 60px; // Or your desired header height
+  background-color: var(--header-bg); // Using variable
+  border-bottom: 1px solid var(--border-color); // Using variable
+  flex-shrink: 0; // Header height should not shrink
+}
+
+.layout-main-content {
+  flex-grow: 1;
+  overflow-y: auto; // Allow scrolling for main content
+  padding: 20px; // Example padding
 }
