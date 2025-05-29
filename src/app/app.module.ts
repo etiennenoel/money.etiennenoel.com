@@ -11,7 +11,7 @@ import {RootComponent} from './components/root/root.component';
 import {IndexComponent} from './pages/index/index.component';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
-import { ExpenseList } from './pages/expense-list/expense-list';
+import { ExpenseList } from './pages/expense-list/expense-list.page';
 import {ExpenseRepository} from './stores/expense-repository';
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {IndexComponent} from './pages/index/index.component';
-import { ExpenseList } from './pages/expense-list/expense-list'; // Import ExpenseList
+import { ExpenseList } from './pages/expense-list/expense-list.page'; // Import ExpenseList
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 
 const routes: Routes = [
