@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import FormsModule and ReactiveFormsModule
+import { CommonModule } from '@angular/common'; // Import CommonModule
 
 import { AppRoutingModule } from './app-routing.module';
 import {BaseComponent} from './components/base/base.component';
@@ -35,7 +36,8 @@ import { CreateExpensePage } from './pages/create-expense/create-expense.page';
     BrowserModule,
     AppRoutingModule,
     FormsModule, // Add FormsModule here
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule // Add CommonModule here
   ],
   providers: [
     provideClientHydration(withEventReplay()),
