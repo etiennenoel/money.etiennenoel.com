@@ -1,22 +1,36 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {IndexComponent} from './pages/index/index.component';
-import { ExpenseList } from './pages/expense-list/expense-list'; // Import ExpenseList
+import {IndexPage} from './pages/index/index.page';
+import { ExpenseListPage } from './pages/expense-list/expense-list.page'; // Import ExpenseListPage
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
+import {RootComponent} from './components/root/root.component';
+import {LayoutComponent} from './components/layout/layout.component';
 
 const routes: Routes = [
   {
     path: "",
-    component: IndexComponent,
+    component: RootComponent,
+    children: [
+      {
+        path: "",
+        component: LayoutComponent,
+        children: [
+          {
+            path: "",
+            component: IndexPage,
+          },
+          {
+            path: 'expenses',
+            component: ExpenseListPage
+          },
+          {
+            path: 'expenses/create',
+            component: CreateExpensePage
+          }
+        ]
+      }
+    ],
   },
-  {
-    path: 'expenses', // New route
-    component: ExpenseList
-  },
-  {
-    path: 'expenses/create',
-    component: CreateExpensePage
-  }
 ];
 
 @NgModule({

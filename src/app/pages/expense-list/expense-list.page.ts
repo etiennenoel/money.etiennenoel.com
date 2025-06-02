@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Expense } from '../../interfaces/expense.interface';
-import { ExpenseRepository } from '../../stores/expense-repository';
+import { ExpenseRepository } from '../../repositories/expense-repository';
 import { MOCK_EXPENSES } from '../../stores/mock-expenses';
 
 @Component({
   selector: 'app-expense-list',
-  templateUrl: './expense-list.html',
-  styleUrl: './expense-list.scss',
+  templateUrl: './expense-list.page.html',
+  styleUrl: './expense-list.page.scss',
   standalone: false,
 })
-export class ExpenseList implements OnInit {
+export class ExpenseListPage implements OnInit {
   public allExpenses: Expense[] = []; // Stores all expenses
   public expenses: Expense[] = []; // Stores filtered and sorted expenses for display
   public searchTerm: string = '';

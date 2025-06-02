@@ -1,7 +1,9 @@
-<div class="d-flex gap-2">
-<!--  <app-sidebar></app-sidebar>-->
+<app-topbar></app-topbar>
 
-  <div class="flex-grow-1 content">
+<div class="container">
+  <sidebar></sidebar>
+  <div class="sidebar-detached-content mt-3 mt-lg-0">
     <router-outlet></router-outlet>
   </div>
+
 </div>

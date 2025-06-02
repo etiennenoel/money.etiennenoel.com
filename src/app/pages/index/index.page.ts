@@ -6,11 +6,11 @@ import {BasePageComponent} from '../../components/base/base-page.component';
 
 @Component({
   selector: 'app-index',
-  templateUrl: './index.component.html',
+  templateUrl: './index.page.html',
   standalone: false,
-  styleUrl: './index.component.scss'
+  styleUrl: './index.page.scss'
 })
-export class IndexComponent extends BasePageComponent implements OnInit {
+export class IndexPage extends BasePageComponent implements OnInit {
 
   constructor(
     @Inject(DOCUMENT) document: Document,

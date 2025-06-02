@@ -8,24 +8,28 @@ import {BaseComponent} from './components/base/base.component';
 import {BasePageComponent} from './components/base/base-page.component';
 import {LayoutComponent} from './components/layout/layout.component';
 import {RootComponent} from './components/root/root.component';
-import {IndexComponent} from './pages/index/index.component';
+import {IndexPage} from './pages/index/index.page';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
-import { ExpenseList } from './pages/expense-list/expense-list';
-import {ExpenseRepository} from './stores/expense-repository';
+import { ExpenseListPage } from './pages/expense-list/expense-list.page';
+import {ExpenseRepository} from './repositories/expense-repository';
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
+import {SidebarComponent} from './components/sidebar/sidebar.component';
+import {TopbarComponent} from './components/topbar/topbar.component';
 
 @NgModule({
   declarations: [
     LayoutComponent,
     RootComponent,
 
+    SidebarComponent,
     ToastComponent,
+    TopbarComponent,
 
     // Pages
-    IndexComponent,
-    ExpenseList,
+    IndexPage,
+    ExpenseListPage,
     CreateExpensePage,
 
     // Components

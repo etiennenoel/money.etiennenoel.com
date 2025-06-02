@@ -41,7 +41,19 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "src/js/hs.bs-dropdown.js",
+              "src/js/hs.bs-validation.js",
+              "src/js/hs.core.js",
+              "src/js/hs.theme-appearance.js",
+              "src/js/hs-form-search.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules",
+              ]
+            },
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
