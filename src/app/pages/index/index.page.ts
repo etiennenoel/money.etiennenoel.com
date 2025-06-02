@@ -24,6 +24,6 @@ export class IndexPage extends BasePageComponent implements OnInit {
   override ngOnInit() {
     super.ngOnInit();
 
-    this.setTitle("Home")
+    this.setTitle("Trunk Track")
   }
 }

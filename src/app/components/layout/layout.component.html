@@ -1,9 +1,33 @@
 <app-topbar></app-topbar>
 
-<div class="container">
-  <sidebar></sidebar>
-  <div class="sidebar-detached-content mt-3 mt-lg-0">
-    <router-outlet></router-outlet>
+<main style="padding-top: 3.875rem;">
+
+  <div class="bg-dark">
+    <div class="content container" style="height: 25rem;padding-top: 1.75rem;
+    padding-bottom: 1.75rem;">
+      <!-- Page Header -->
+      <div class="page-header page-header-light page-header-reset">
+        <div class="row align-items-center">
+          <div class="col">
+            <h1 class="page-header-title">Dashboard</h1>
+          </div>
+
+          <div class="col-auto">
+            <a class="btn btn-primary" href="#">My dashboard</a>
+          </div>
+        </div>
+        <!-- End Row -->
+      </div>
+      <!-- End Page Header -->
+    </div>
   </div>
 
-</div>
+
+  <div class="container" style="margin-top: -20rem;">
+    <sidebar></sidebar>
+    <div class="sidebar-detached-content mt-3 mt-lg-0">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+</main>
