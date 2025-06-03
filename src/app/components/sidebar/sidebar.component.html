@@ -21,7 +21,7 @@
           <div id="navbarVerticalMenu" class="nav nav-pills nav-vertical card-navbar-nav">
             <!-- Collapse -->
             <div class="nav-item">
-              <a class="nav-link" [routerLink]="'/'" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+              <a class="nav-link" [class.active]="currentRoute === RouteEnum.Home" [routerLink]="RouteEnum.Home" role="button">
                 <i class="bi-house-door nav-icon"></i>
                 <span class="nav-link-title">Dashboard</span>
               </a>
@@ -30,7 +30,7 @@
 
             <!-- Collapse -->
             <div class="nav-item">
-              <a class="nav-link collapsed" [routerLink]="'expenses'" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+              <a class="nav-link" [class.active]="currentRoute === RouteEnum.Expenses" [routerLink]="RouteEnum.Expenses" role="button">
                 <i class="bi bi-receipt nav-icon"></i>
                 <span class="nav-link-title">Expenses</span>
               </a>
