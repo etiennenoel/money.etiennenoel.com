@@ -1,4 +1,4 @@
-<div class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
+<div class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset" [class.navbar-vertical-aside-mini-mode]="sidebarCollapsed">
   <header id="header" class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white">
   <app-topbar></app-topbar>
   </header>
@@ -6,7 +6,7 @@
   <main class="main">
 
     <div class="content container-fluid">
-      <sidebar></sidebar>
+      <sidebar [(sidebarCollapsed)]="sidebarCollapsed"></sidebar>
 
       <div>
         <router-outlet></router-outlet>

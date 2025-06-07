@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {BaseComponent} from '../base/base.component';
 import {ToastStore} from '../../stores/toast.store';
 import {DOCUMENT} from '@angular/common';
@@ -12,6 +12,12 @@ import {Router} from '@angular/router';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent extends BaseComponent implements OnInit {
+
+  @Input()
+  sidebarCollapsed = false;
+
+  @Output()
+  sidebarCollapsedChange = new EventEmitter<boolean>();
 
   currentRoute: RouteEnum = RouteEnum.Home;
 
@@ -33,7 +39,24 @@ export class SidebarComponent extends BaseComponent implements OnInit {
     }))
 
     this.updateRoute();
+
+    // Restore sidebar state from local storage
+    const storedSidebarState = localStorage.getItem('sidebarCollapsed');
+    if(storedSidebarState !== null && storedSidebarState === 'true') {
+      this.sidebarCollapsed = true;
+      this.sidebarCollapsedChange.emit(this.sidebarCollapsed);
+    }
   }
+
+  toggleSidebar() {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+    this.sidebarCollapsedChange.emit(this.sidebarCollapsed);
+
+    // Save sidebar state to local storage
+    localStorage.setItem('sidebarCollapsed', String(this.sidebarCollapsed));
+  }
+
+
 
   updateRoute() {
     if(!this.window) {
