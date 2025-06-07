@@ -5,7 +5,7 @@ import {ToastStore} from '../../stores/toast.store';
 import {DOCUMENT} from '@angular/common';
 import {ToastMessageInterface} from '../../interfaces/toast-message.interface';
 import {delay, pipe} from 'rxjs';
-import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-datepicker-range',
@@ -14,7 +14,7 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepicker} from '@ng-b
   styleUrl: './datepicker-range.component.scss'
 })
 export class DatepickerRangeComponent extends BaseComponent implements OnInit {
-  @ViewChild('datepicker') datepicker!: NgbDatepicker;
+  @ViewChild('datepicker', { static: false }) datepicker!: NgbInputDatepicker;
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
