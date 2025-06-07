@@ -59,8 +59,13 @@ export class DatepickerRangeComponent extends BaseComponent implements OnInit {
     );
   }
 
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  get formattedRange(): string {
+    if (this.fromDate && this.toDate) {
+      return `${this.formatter.format(this.fromDate)} - ${this.formatter.format(this.toDate)}`;
+    } else if (this.fromDate) {
+      return this.formatter.format(this.fromDate);
+    } else {
+      return 'Select Date Range';
+    }
   }
 }
