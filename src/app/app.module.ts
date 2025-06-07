@@ -22,6 +22,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
 import { ExpenseManager } from './managers/expense.manager';
 import {CreateExpenseModal} from './components/modals/create-expense-modal/create-expense.modal';
+import {MagienoCoreModule} from '@magieno/angular-core';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,9 @@ import {CreateExpenseModal} from './components/modals/create-expense-modal/creat
     FormsModule, // Add FormsModule here
     ReactiveFormsModule,
     CommonModule,
-    NgbModule // Add CommonModule here
+    NgbModule, // Add CommonModule here
+
+    MagienoCoreModule,
   ],
   providers: [
     provideClientHydration(withEventReplay()),
