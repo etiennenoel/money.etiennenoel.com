@@ -28,8 +28,22 @@
         </ng-template>
       </div>
     </div>
-    <button id="js-daterangepicker-predefined" class="btn btn-light btn-sm dropdown-toggle d-flex gap-2" (click)="datepicker.toggle()" type="button">
-      <i class="bi-calendar-week"></i>
-      <span>{{formattedRange}}</span>
-    </button>
+    <div class="dropdown">
+      <button class="btn btn-light btn-sm dropdown-toggle d-flex gap-2" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi-calendar-week"></i>
+        <span>{{formattedRange}}</span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('Today')">Today</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('Yesterday')">Yesterday</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('This Week')">This Week</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('Last Week')">Last Week</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('This Month')">This Month</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('Last Month')">Last Month</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('This Year')">This Year</a></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="selectPredefinedRange('Last Year')">Last Year</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" style="cursor: pointer;" (click)="openCustomDatepicker()">Custom</a></li>
+      </ul>
+    </div>
 </form>
