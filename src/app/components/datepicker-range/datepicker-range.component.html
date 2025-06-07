@@ -1,8 +1,8 @@
 <form class="row row-cols-sm-auto">
-  <button class="btn btn-outline-secondary" (click)="datepicker.toggle()" type="button">{{ formattedRange }}</button>
-  <div class="dp-hidden position-absolute">
-    <div class="input-group">
-      <input
+  <div class="col-12">
+    <div class="dp-hidden position-absolute">
+      <div class="input-group">
+        <input
           name="datepicker"
           class="form-control"
           ngbDatepicker
@@ -29,6 +29,6 @@
         </ng-template>
       </div>
     </div>
-    </div>
+    <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button">{{formattedRange}}</button>
   </div>
 </form>
