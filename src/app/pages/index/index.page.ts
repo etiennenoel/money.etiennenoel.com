@@ -4,7 +4,7 @@ import {DOCUMENT} from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CreateExpenseModal} from '../../components/modals/create-expense-modal/create-expense.modal';
+import {CreateExpenseModal} from '../../modals/create-expense-modal/create-expense.modal';
 
 @Component({
   selector: 'app-index',

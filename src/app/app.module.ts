@@ -21,7 +21,7 @@ import {StatsCardComponent} from './components/stats-card/stats-card.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
 import { ExpenseManager } from './managers/expense.manager';
-import {CreateExpenseModal} from './components/modals/create-expense-modal/create-expense.modal';
+import {CreateExpenseModal} from './modals/create-expense-modal/create-expense.modal';
 
 @NgModule({
   declarations: [

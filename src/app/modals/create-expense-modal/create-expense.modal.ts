@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {DOCUMENT} from '@angular/common';
-import {BaseComponent} from '../../base/base.component';
+import {BaseComponent} from '../../components/base/base.component';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
