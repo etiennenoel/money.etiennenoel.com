@@ -1,3 +1,75 @@
+<div class="page-header">
+  <div class="row align-items-center">
+    <div class="col">
+      <h1 class="page-header-title">Dashboard</h1>
+    </div>
+    <!-- End Col -->
+
+    <div class="col-auto">
+      <a class="btn btn-primary" href="javascript:;" data-bs-toggle="modal" data-bs-target="#inviteUserModal">
+        <i class="bi bi-receipt-cutoff"></i> Create new expense
+      </a>
+    </div>
+    <!-- End Col -->
+  </div>
+  <!-- End Row -->
+</div>
+
+<div class="d-flex justify-content-end">
+  <!-- End Col -->
+
+  <div>
+
+    <!-- Daterangepicker -->
+    <button id="js-daterangepicker-predefined" class="btn btn-light btn-sm dropdown-toggle">
+      <i class="bi-calendar-week"></i>
+      <span class="js-daterangepicker-predefined-preview ms-1">Jun 5 - Jun 5, 2025</span>
+    </button>
+    <!-- End Daterangepicker -->
+  </div>
+  <!-- End Col -->
+</div>
+
+
+<div class="row">
+  <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+    <app-stats-card
+      [title]="'Money spent'"
+      currentPeriodValue="$2,913"
+      previousPeriodValue="$1,913"
+      percentageDifference="52.3%"
+      trendDirection="up"
+      trendSentiment="negative"
+    ></app-stats-card>
+
+  </div>
+  <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+    <app-stats-card
+      [title]="'Number of transactions'"
+      currentPeriodValue="24"
+      previousPeriodValue="34"
+      percentageDifference="12.5%"
+      trendDirection="down"
+      trendSentiment="positive"
+    ></app-stats-card>
+
+
+  </div>
+
+
+  <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+    <app-stats-card
+      [title]="'Avg. transaction value'"
+      currentPeriodValue="$121.3"
+      previousPeriodValue="$100.5"
+      percentageDifference="20.7%"
+      trendDirection="up"
+      trendSentiment="negative"
+    ></app-stats-card>
+  </div>
+</div>
+
+
 <div class="card h-100">
   <!-- Header -->
   <div class="card-header card-header-content-sm-between">

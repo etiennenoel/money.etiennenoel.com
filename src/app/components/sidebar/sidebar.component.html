@@ -1,48 +1,49 @@
-<div class="navbar-expand-lg">
-  <!-- Navbar Toggle -->
-  <button class="navbar-toggler text-white border-white-10 w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalNavMenu" aria-controls="navbarVerticalNavMenu" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="d-flex justify-content-between align-items-center">
-            <span class="navbar-toggler-text text-white">Nav menu</span>
-            <span class="navbar-toggler-default">
-              <i class="bi-list"></i>
-            </span>
-            <span class="navbar-toggler-toggled">
-              <i class="bi-x"></i>
-            </span>
-          </span>
-  </button>
-  <!-- End Navbar Toggle -->
 
-  <aside id="navbarVerticalNavMenu" class="js-navbar-vertical-aside navbar navbar-vertical navbar-vertical-absolute navbar-vertical-detached navbar-shadow navbar-collapse collapse bg-white rounded-2 navbar-vertical-aside-initialized">
-    <div class="navbar-vertical-container">
-      <div class="navbar-vertical-footer-offset">
-        <!-- Content -->
-        <div class="navbar-vertical-content">
-          <div id="navbarVerticalMenu" class="nav nav-pills nav-vertical card-navbar-nav">
-            <!-- Collapse -->
-            <div class="nav-item">
-              <a class="nav-link" [class.active]="currentRoute === RouteEnum.Home" [routerLink]="RouteEnum.Home" role="button">
-                <i class="bi-house-door nav-icon"></i>
-                <span class="nav-link-title">Dashboard</span>
-              </a>
-            </div>
-            <!-- End Collapse -->
 
-            <!-- Collapse -->
-            <div class="nav-item">
-              <a class="nav-link" [class.active]="currentRoute === RouteEnum.Expenses" [routerLink]="RouteEnum.Expenses" role="button">
-                <i class="bi bi-receipt nav-icon"></i>
-                <span class="nav-link-title">Expenses</span>
-              </a>
-            </div>
-            <!-- End Collapse -->
+<aside id="navbarVerticalNavMenu"
+       class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered bg-white navbar-vertical-aside-initialized">
+  <div class="navbar-vertical-container">
+    <div class="navbar-vertical-footer-offset">
+      <a class="navbar-brand" href="./index.html" aria-label="Front">
+        <img class="navbar-brand-logo" src="images/icon.png" alt="Logo" data-hs-theme-appearance="default" style="min-width: 3.0rem;max-width: 3.0rem;">
+        <img class="navbar-brand-logo" src="images/TrunkTrack.png" alt="Logo" data-hs-theme-appearance="dark">
+        <img class="navbar-brand-logo-mini" src="./assets/svg/logos/logo-short.svg" alt="Logo" data-hs-theme-appearance="default">
+        <img class="navbar-brand-logo-mini" src="./assets/svg/logos-light/logo-short.svg" alt="Logo" data-hs-theme-appearance="dark">
+      </a>
+
+      <button type="button" class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" style="opacity: 1;">
+        <i class="bi-arrow-bar-left navbar-toggler-short-align" data-bs-template="<div class=&quot;tooltip d-none d-md-block&quot; role=&quot;tooltip&quot;><div class=&quot;arrow&quot;></div><div class=&quot;tooltip-inner&quot;></div></div>" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Collapse" data-bs-original-title="Collapse"></i>
+        <i class="bi-arrow-bar-right navbar-toggler-full-align" data-bs-template="<div class=&quot;tooltip d-none d-md-block&quot; role=&quot;tooltip&quot;><div class=&quot;arrow&quot;></div><div class=&quot;tooltip-inner&quot;></div></div>" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Expand" data-bs-original-title="Expand"></i>
+      </button>
+
+      <!-- Content -->
+      <div class="navbar-vertical-content">
+        <div id="navbarVerticalMenu" class="nav nav-pills nav-vertical card-navbar-nav">
+          <!-- Collapse -->
+          <div class="nav-item">
+            <a class="nav-link" [class.active]="currentRoute === RouteEnum.Home" [routerLink]="RouteEnum.Home"
+               role="button">
+              <i class="bi-house-door nav-icon"></i>
+              <span class="nav-link-title">Dashboard</span>
+            </a>
+          </div>
+          <!-- End Collapse -->
+
+          <!-- Collapse -->
+          <div class="nav-item">
+            <a class="nav-link" [class.active]="currentRoute === RouteEnum.Expenses" [routerLink]="RouteEnum.Expenses"
+               role="button">
+              <i class="bi bi-receipt nav-icon"></i>
+              <span class="nav-link-title">Expenses</span>
+            </a>
+          </div>
+          <!-- End Collapse -->
 
         </div>
-        </div>
-        <!-- End Content -->
-
       </div>
+      <!-- End Content -->
+
     </div>
-  </aside>
-</div>
+  </div>
+</aside>
 

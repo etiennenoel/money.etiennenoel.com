@@ -17,6 +17,9 @@ import { CreateExpenseComponent } from './components/create-expense/create-expen
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {TopbarComponent} from './components/topbar/topbar.component';
+import {StatsCardComponent} from './components/stats-card/stats-card.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,8 @@ import {TopbarComponent} from './components/topbar/topbar.component';
     ToastComponent,
     TopbarComponent,
 
+    DatepickerRangeComponent,
+
     // Pages
     IndexPage,
     ExpenseListPage,
@@ -34,6 +39,7 @@ import {TopbarComponent} from './components/topbar/topbar.component';
 
     // Components
     CreateExpenseComponent,
+    StatsCardComponent,
 
   ],
   imports: [
@@ -41,7 +47,8 @@ import {TopbarComponent} from './components/topbar/topbar.component';
     AppRoutingModule,
     FormsModule, // Add FormsModule here
     ReactiveFormsModule,
-    CommonModule // Add CommonModule here
+    CommonModule,
+    NgbModule // Add CommonModule here
   ],
   providers: [
     provideClientHydration(withEventReplay()),
