@@ -54,7 +54,7 @@ import {DatepickerRangeComponent} from './components/datepicker-range/datepicker
     provideClientHydration(withEventReplay()),
 
     // Repositories
-    ExpenseRepository,
+    // ExpenseRepository, // Removed to ensure it's only client-side due to IndexedDB
 
     ToastStore,
   ],

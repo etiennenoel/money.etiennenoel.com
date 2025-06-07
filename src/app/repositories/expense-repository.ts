@@ -8,30 +8,41 @@ const STORE_NAME = 'expenses';
   providedIn: 'root',
 })
 export class ExpenseRepository {
-  private dbPromise: Promise<IDBDatabase>;
+  private dbPromise!: Promise<IDBDatabase>; // Add definite assignment assertion
 
   constructor() {
-    this.dbPromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open(DB_NAME, 1);
+    if (typeof window !== 'undefined' && window.indexedDB) {
+      this.dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
 
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(STORE_NAME)) {
-          db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-        }
-      };
+        request.onupgradeneeded = (event) => {
+          const db = (event.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
 
-      request.onsuccess = (event) => {
-        resolve((event.target as IDBOpenDBRequest).result);
-      };
+        request.onsuccess = (event) => {
+          resolve((event.target as IDBOpenDBRequest).result);
+        };
 
-      request.onerror = (event) => {
-        reject((event.target as IDBOpenDBRequest).error);
-      };
-    });
+        request.onerror = (event) => {
+          reject((event.target as IDBOpenDBRequest).error);
+        };
+      });
+    } else {
+      // Handle the case where IndexedDB is not available (e.g., server-side rendering)
+      // You might want to log a warning or use a mock implementation
+      console.warn('IndexedDB is not available in this environment.');
+      // Fallback to a promise that will reject, or a mock implementation
+      this.dbPromise = Promise.reject(new Error('IndexedDB not supported'));
+    }
   }
 
   async create(expenseData: Omit<Expense, 'id' | 'createdAt'>): Promise<Expense> {
+    if (!this.dbPromise) {
+      return Promise.reject(new Error('Database not initialized'));
+    }
     const db = await this.dbPromise;
     const expense: Expense = {
       ...expenseData,
