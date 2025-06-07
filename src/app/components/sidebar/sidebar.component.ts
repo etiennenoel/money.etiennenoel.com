@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, PLATFORM_ID} from '@angular/core';
 import {BaseComponent} from '../base/base.component';
 import {ToastStore} from '../../stores/toast.store';
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, isPlatformServer} from '@angular/common';
 import {RouteEnum} from '../../enums/route.enum';
 import {Router} from '@angular/router';
 
@@ -24,6 +24,7 @@ export class SidebarComponent extends BaseComponent implements OnInit {
   constructor(
     private readonly toastStore: ToastStore,
     @Inject(DOCUMENT) document: Document,
+    @Inject(PLATFORM_ID) private readonly platformId: Object,
     private readonly router: Router,
   ) {
     super(document);
@@ -40,6 +41,10 @@ export class SidebarComponent extends BaseComponent implements OnInit {
 
     this.updateRoute();
 
+    if(isPlatformServer(this.platformId)) {
+      return;
+    }
+
     // Restore sidebar state from local storage
     const storedSidebarState = localStorage.getItem('sidebarCollapsed');
     if(storedSidebarState !== null && storedSidebarState === 'true') {
@@ -52,6 +57,9 @@ export class SidebarComponent extends BaseComponent implements OnInit {
     this.sidebarCollapsed = !this.sidebarCollapsed;
     this.sidebarCollapsedChange.emit(this.sidebarCollapsed);
 
+    if(isPlatformServer(this.platformId)) {
+      return;
+    }
     // Save sidebar state to local storage
     localStorage.setItem('sidebarCollapsed', String(this.sidebarCollapsed));
   }
