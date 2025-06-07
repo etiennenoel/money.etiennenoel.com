@@ -21,7 +21,6 @@ import {StatsCardComponent} from './components/stats-card/stats-card.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
 import { ExpenseManager } from './managers/expense.manager';
-import { ExpenseRepository } from './repositories/expense.repository';
 
 @NgModule({
   declarations: [
@@ -57,10 +56,10 @@ import { ExpenseRepository } from './repositories/expense.repository';
 
     // Repositories
     ExpenseRepository,
-    
+
     // Managers
     ExpenseManager,
-    
+
     ToastStore,
   ],
   bootstrap: [RootComponent]
