@@ -20,6 +20,8 @@ import {TopbarComponent} from './components/topbar/topbar.component';
 import {StatsCardComponent} from './components/stats-card/stats-card.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
+import { ExpenseManager } from './managers/expense.manager';
+import { ExpenseRepository } from './repositories/expense.repository';
 
 @NgModule({
   declarations: [
@@ -54,8 +56,11 @@ import {DatepickerRangeComponent} from './components/datepicker-range/datepicker
     provideClientHydration(withEventReplay()),
 
     // Repositories
-    // ExpenseRepository, // Removed to ensure it's only client-side due to IndexedDB
-
+    ExpenseRepository,
+    
+    // Managers
+    ExpenseManager,
+    
     ToastStore,
   ],
   bootstrap: [RootComponent]
