@@ -1,10 +1,9 @@
-<form class="row row-cols-sm-auto">
-  <div class="col-12">
+<form>
     <div class="dp-hidden position-absolute">
       <div class="input-group">
         <input
           name="datepicker"
-          class="form-control"
+          class="dp-hidden"
           ngbDatepicker
           #datepicker="ngbDatepicker"
           [autoClose]="'outside'"
@@ -29,29 +28,8 @@
         </ng-template>
       </div>
     </div>
-    <div class="input-group">
-      <input
-        #dpFromDate
-        class="form-control"
-        placeholder="yyyy-mm-dd"
-        name="dpFromDate"
-        [value]="formatter.format(fromDate)"
-        (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
-      />
-      <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button"></button>
-    </div>
-  </div>
-  <div class="col-12">
-    <div class="input-group">
-      <input
-        #dpToDate
-        class="form-control"
-        placeholder="yyyy-mm-dd"
-        name="dpToDate"
-        [value]="formatter.format(toDate)"
-        (input)="toDate = validateInput(toDate, dpToDate.value)"
-      />
-      <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button"></button>
-    </div>
-  </div>
+    <button id="js-daterangepicker-predefined" class="btn btn-light btn-sm dropdown-toggle d-flex gap-2" (click)="datepicker.toggle()" type="button">
+      <i class="bi-calendar-week"></i>
+      <span>{{formattedRange}}</span>
+    </button>
 </form>
