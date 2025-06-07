@@ -13,6 +13,7 @@ export class ExpenseRepository {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
+
       this.dbPromise = new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, 1);
 

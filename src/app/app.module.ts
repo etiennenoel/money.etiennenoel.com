@@ -21,6 +21,7 @@ import {StatsCardComponent} from './components/stats-card/stats-card.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
 import { ExpenseManager } from './managers/expense.manager';
+import {CreateExpenseModal} from './components/modals/create-expense-modal/create-expense.modal';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,8 @@ import { ExpenseManager } from './managers/expense.manager';
     CreateExpenseComponent,
     StatsCardComponent,
 
+    // Modals
+    CreateExpenseModal,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,8 @@ import { ExpenseManager } from './managers/expense.manager';
 
     // Repositories
     ExpenseRepository,
+
+    // Managers
     ExpenseManager,
 
     ToastStore,

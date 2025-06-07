@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ExpenseRepository } from '../../repositories/expense-repository';
 import { ToastStore } from '../../stores/toast.store';
 import { Expense } from '../../interfaces/expense.interface';
 import { ToastMessageInterface } from '../../interfaces/toast-message.interface';
+import { isPlatformBrowser } from '@angular/common';
+import { Injector } from '@angular/core';
 
 @Component({
   selector: 'app-create-expense',
@@ -12,12 +14,18 @@ import { ToastMessageInterface } from '../../interfaces/toast-message.interface'
 })
 export class CreateExpenseComponent implements OnInit {
   expenseForm!: FormGroup;
+  private expenseRepository?: ExpenseRepository;
 
   constructor(
     private fb: FormBuilder,
-    private expenseRepository: ExpenseRepository,
-    private toastStore: ToastStore
-  ) {}
+    private toastStore: ToastStore,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private injector: Injector
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.expenseRepository = this.injector.get(ExpenseRepository);
+    }
+  }
 
   ngOnInit(): void {
     this.expenseForm = this.fb.group({
@@ -32,6 +40,12 @@ export class CreateExpenseComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.expenseRepository) {
+      this.toastStore.publish({ message: 'Cannot create expense: repository not available.' });
+      console.error('ExpenseRepository not available on submit');
+      return;
+    }
+
     if (this.expenseForm.invalid) {
       this.markAllAsTouched();
       return;

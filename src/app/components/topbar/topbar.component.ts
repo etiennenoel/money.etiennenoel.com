@@ -1,10 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
-import {RouterOutlet} from "@angular/router";
 import {BaseComponent} from '../base/base.component';
 import {ToastStore} from '../../stores/toast.store';
 import {DOCUMENT} from '@angular/common';
-import {ToastMessageInterface} from '../../interfaces/toast-message.interface';
-import {delay, pipe} from 'rxjs';
 
 @Component({
   selector: 'app-topbar',

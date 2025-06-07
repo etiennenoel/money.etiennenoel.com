@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, Optional } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Expense } from '../../interfaces/expense.interface';
 import { ExpenseRepository } from '../../repositories/expense-repository';
 import { MOCK_EXPENSES } from '../../stores/mock-expenses';
+import { Injector } from '@angular/core'; // Import Injector
 
 @Component({
   selector: 'app-expense-list',
@@ -15,12 +17,26 @@ export class ExpenseListPage implements OnInit {
   public searchTerm: string = '';
   public currentSortColumn: keyof Expense | '' = 'transactionDate';
   public isSortAscending: boolean = false;
+  private expenseRepository?: ExpenseRepository;
 
-  constructor(private expenseRepository: ExpenseRepository) { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private injector: Injector // Inject Injector
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.expenseRepository = this.injector.get(ExpenseRepository);
+    }
+  }
 
-  ngOnInit(): void {
-    // In a real app, this would be an async call
-    this.allExpenses = MOCK_EXPENSES; // Load all data
+  async ngOnInit(): Promise<void> {
+    if (this.expenseRepository) {
+      // In a real app, this would be an async call
+      this.allExpenses = await this.expenseRepository.getAll(); // Load all data
+    } else {
+      // Fallback for SSR or if repository not available
+      this.allExpenses = MOCK_EXPENSES;
+      console.warn('ExpenseRepository not available, using mock data.');
+    }
     this.applyFilters(); // Apply initial filters (none) and sorting
     console.log('Expenses after initial load, filter, and sort:', this.expenses);
   }
