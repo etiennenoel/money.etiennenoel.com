@@ -13,7 +13,7 @@ import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
 import { ExpenseListPage } from './pages/expense-list/expense-list.page';
 import {ExpenseRepository} from './repositories/expense-repository';
-import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
+import { CreateExpenseForm } from './forms/create-expense-form/create-expense.form';
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {TopbarComponent} from './components/topbar/topbar.component';
@@ -40,7 +40,7 @@ import {CreateExpenseModal} from './modals/create-expense-modal/create-expense.m
     CreateExpensePage,
 
     // Components
-    CreateExpenseComponent,
+    CreateExpenseForm,
     StatsCardComponent,
 
     // Modals

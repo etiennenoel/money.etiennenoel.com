@@ -9,10 +9,10 @@ import { Injector } from '@angular/core';
 
 @Component({
   selector: 'app-create-expense',
-  templateUrl: './create-expense.component.html',
+  templateUrl: './create-expense.form.html',
   standalone: false,
 })
-export class CreateExpenseComponent implements OnInit {
+export class CreateExpenseForm implements OnInit {
   expenseForm!: FormGroup;
   private expenseRepository?: ExpenseRepository;
 
