@@ -1,8 +1,14 @@
+form {
+  position: relative;
+}
+
 .dp-hidden {
   width: 0;
   margin: 0;
   border: none;
   padding: 0;
+  right: 0;
+  bottom: 0;
 }
 .custom-day {
   text-align: center;
