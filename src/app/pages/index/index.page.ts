@@ -3,6 +3,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DOCUMENT} from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import {BasePageComponent} from '../../components/base/base-page.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CreateExpenseModal} from '../../components/modals/create-expense-modal/create-expense.modal';
 
 @Component({
   selector: 'app-index',
@@ -16,6 +18,7 @@ export class IndexPage extends BasePageComponent implements OnInit {
     @Inject(DOCUMENT) document: Document,
     protected readonly route: ActivatedRoute,
     protected readonly router: Router,
+    protected readonly ngbModal: NgbModal,
     title: Title,
   ) {
     super(document, title);
@@ -25,5 +28,9 @@ export class IndexPage extends BasePageComponent implements OnInit {
     super.ngOnInit();
 
     this.setTitle("Trunk Track")
+  }
+
+  openNewExpenseModal() {
+    this.ngbModal.open(CreateExpenseModal)
   }
 }
