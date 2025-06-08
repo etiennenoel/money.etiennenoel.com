@@ -1,18 +1,38 @@
 <div class="modal-header">
-  <h3 class="modal-title text-center">Create new expense</h3>
+    <h3 class="modal-title text-center">Create new expense</h3>
 </div>
 <div class="modal-body">
-  <magieno-input-money-field [advancedFormControl]="this.form.formElements.amount | asAdvancedFormControl"></magieno-input-money-field>
+
+    <magieno-input-money-field
+            [advancedFormControl]="this.form.formElements.amount | asAdvancedFormControl"></magieno-input-money-field>
+
+    <div class="mt-3">
+        <magieno-datepicker
+
+                [advancedFormControl]="this.form.formElements.transactionDate | asAdvancedFormControl">
+            <i calendarIcon class="bi bi-calendar"></i>
+        </magieno-datepicker>
+    </div>
+
+    <div class="mt-3">
+        <magieno-input-text-field
+                [advancedFormControl]="this.form.formElements.location | asAdvancedFormControl"></magieno-input-text-field>
+    </div>
+
+    <div class="mt-3">
+        <magieno-textarea
+                [advancedFormControl]="this.form.formElements.description | asAdvancedFormControl"></magieno-textarea>
+    </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-primary" (click)="createExpense()" [disabled]="isCreateExpenseDisabled">
+    <button type="button" class="btn btn-primary" (click)="createExpense()" [disabled]="isCreateExpenseDisabled">
     <span *ngIf="!isCreateExpenseDisabled">
       <i class="bi bi-plus"></i> Create expense
     </span>
-    <span *ngIf="isCreateExpenseDisabled">
+        <span *ngIf="isCreateExpenseDisabled">
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       Creating...
     </span>
-  </button>
-  <button type="button" class="btn btn-white" (click)="activeModal.close()">Cancel</button>
+    </button>
+    <button type="button" class="btn btn-white" (click)="activeModal.close()">Cancel</button>
 </div>

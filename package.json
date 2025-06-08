@@ -22,7 +22,7 @@
     "@angular/router": "^19.0.0",
     "@angular/ssr": "^19.0.2",
     "@magieno/angular-core": "^0.0.6",
-    "@magieno/angular-advanced-forms": "^0.0.8",
+    "@magieno/angular-advanced-forms": "^0.0.10",
     "@magieno/common": "^1.0.13",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "@ngx-translate/core": "^16.0.4",

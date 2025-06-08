@@ -1,5 +1,6 @@
 import { advancedFormControl, FieldType } from '@magieno/common';
-import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from '@pristine-ts/class-validator';
+import {FormDate} from '@magieno/angular-advanced-forms';
 
 export class CreateExpenseOptions {
   @advancedFormControl({
@@ -8,60 +9,59 @@ export class CreateExpenseOptions {
       labelTitle: 'Amount',
     },
   })
-  @IsNotEmpty({ message: 'Amount is required.' }) // Matching HTML
-  @IsNumber({}, { message: 'Amount must be a number.' }) // General validation
-  @Min(0.01, { message: 'Amount must be greater than 0.' }) // Matching HTML
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0.01)
   amount: number = 0;
 
   @advancedFormControl({
-    fieldType: FieldType.Date, // Guessed
+    fieldType: FieldType.Date,
     displayableElements: {
       labelTitle: 'Transaction Date',
     },
   })
-  @IsNotEmpty({ message: 'Transaction date is required.' }) // Matching HTML
-  @IsDate({ message: 'Transaction date must be a valid date.' })
-  transactionDate!: Date; // Using definite assignment assertion for now, validators will ensure it's populated.
+  @IsNotEmpty()
+  transactionDate!: FormDate;
 
   @advancedFormControl({
-    fieldType: FieldType.Text, // Guessed
+    fieldType: FieldType.String,
     displayableElements: {
       labelTitle: 'Location',
     },
   })
   @IsOptional()
-  @IsString({ message: 'Location must be a string.' })
+  @IsString()
   location!: string;
 
   @advancedFormControl({
-    fieldType: FieldType.Textarea, // Guessed (or FieldType.Text)
+    fieldType: FieldType.String,
     displayableElements: {
       labelTitle: 'Description',
     },
   })
-  @IsNotEmpty({ message: 'Description is required.' }) // Matching HTML
-  @IsString({ message: 'Description must be a string.' })
+  @IsNotEmpty()
+  @IsString()
   description!: string;
 
   @advancedFormControl({
-    fieldType: FieldType.Tags, // Guessed (or FieldType.Text for comma-separated)
+    fieldType: FieldType.String,
     displayableElements: {
       labelTitle: 'Categories',
     },
   })
   @IsOptional()
-  @IsArray({ message: 'Categories must be an array.' })
-  @IsString({ each: true, message: 'Each category must be a string.' })
+  @IsArray()
+  @IsString()
   categories!: string[];
 
   @advancedFormControl({
-    fieldType: FieldType.Tags, // Guessed (or FieldType.Text for comma-separated)
+    fieldType: FieldType.String,
     displayableElements: {
       labelTitle: 'Labels',
     },
   })
   @IsOptional()
-  @IsArray({ message: 'Labels must be an array.' })
-  @IsString({ each: true, message: 'Each label must be a string.' })
+  @IsArray()
+  @IsString()
   labels!: string[];
 }
