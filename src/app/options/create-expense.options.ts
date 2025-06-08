@@ -1,11 +1,10 @@
-import {advancedFormControl, FieldType, translationBaseKey} from '@magieno/common';
+import {advancedFormControl, FieldType} from '@magieno/common';
 
-@translationBaseKey("create-expense.options")
 export class CreateExpenseOptions {
   @advancedFormControl({
     fieldType: FieldType.Money,
-    labelTitle: {
-      en: "Amount",
+    displayableElements: {
+       labelTitle: "Amount",
     },
   })
   amount: number = 0;
