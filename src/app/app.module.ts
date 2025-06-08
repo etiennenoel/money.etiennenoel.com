@@ -23,6 +23,8 @@ import {DatepickerRangeComponent} from './components/datepicker-range/datepicker
 import { ExpenseManager } from './managers/expense.manager';
 import {CreateExpenseModal} from './components/modals/create-expense-modal/create-expense.modal';
 import {MagienoCoreModule} from '@magieno/angular-core';
+import {MagienoAdvancedFormsModule} from '@magieno/angular-advanced-forms';
+import {provideTranslateService, TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -56,9 +58,18 @@ import {MagienoCoreModule} from '@magieno/angular-core';
     NgbModule, // Add CommonModule here
 
     MagienoCoreModule,
+    MagienoAdvancedFormsModule,
+
+    TranslateModule,
   ],
   providers: [
     provideClientHydration(withEventReplay()),
+    provideTranslateService(),
+
+    {
+      provide: "environment.activate-debug-tools",
+      useValue: false,
+    },
 
     // Repositories
     ExpenseRepository,

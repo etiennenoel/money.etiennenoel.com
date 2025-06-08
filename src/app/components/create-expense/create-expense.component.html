@@ -1,4 +1,7 @@
 <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+
+  <magieno-input-money-field [advancedFormControl]="this.form.formElements.amount | asAdvancedFormControl"></magieno-input-money-field>
+
   <div>
     <label for="transactionDate">Transaction Date:</label>
     <input type="date" id="transactionDate" formControlName="transactionDate" aria-label="Transaction Date">
