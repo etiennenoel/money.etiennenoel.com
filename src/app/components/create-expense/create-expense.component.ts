@@ -6,6 +6,8 @@ import { Expense } from '../../interfaces/expense.interface';
 import { ToastMessageInterface } from '../../interfaces/toast-message.interface';
 import { isPlatformBrowser } from '@angular/common';
 import { Injector } from '@angular/core';
+import {AdvancedForm, FormFactory} from "@magieno/angular-advanced-forms";
+import {CreateExpenseOptions} from "../../options/create-expense.options";
 
 @Component({
   selector: 'app-create-expense',
@@ -16,15 +18,20 @@ export class CreateExpenseComponent implements OnInit {
   expenseForm!: FormGroup;
   private expenseRepository?: ExpenseRepository;
 
+  protected form: AdvancedForm<CreateExpenseOptions>;
+
   constructor(
     private fb: FormBuilder,
     private toastStore: ToastStore,
+    private readonly formFactory: FormFactory,
     @Inject(PLATFORM_ID) private platformId: Object,
     private injector: Injector
   ) {
     if (isPlatformBrowser(this.platformId)) {
       this.expenseRepository = this.injector.get(ExpenseRepository);
     }
+
+    this.form = this.formFactory.create(new CreateExpenseOptions());
   }
 
   ngOnInit(): void {
