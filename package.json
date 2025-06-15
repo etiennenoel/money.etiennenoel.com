@@ -28,6 +28,7 @@
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
     "@popperjs/core": "^2.11.8",
+    "@pristine-ts/mysql-common": "^0.0.368",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
     "chartjs-plugin-annotation": "^3.0.1",
