@@ -176,23 +176,27 @@ export class ExpenseRepository {
   }
 
   async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {
+    const requestedPageSize = searchQuery.pageSize || 10; // Default page size
+    const requestedPage = searchQuery.page || 1;
+
     if (!isPlatformBrowser(this.platformId)) {
-      // Or handle as per project's error handling strategy for non-browser envs
       return Promise.resolve({
-        count: 0,
-        rows: [],
-        page: searchQuery.pagination?.page || 1,
-        pageSize: searchQuery.pagination?.pageSize || 0, // or a default
+        results: [],
+        totalNumberOfResults: 0,
+        numberOfResultsReturned: 0,
+        maximumNumberOfResultsPerPage: requestedPageSize,
+        page: requestedPage,
       });
     }
 
     const db = await this.dbPromise;
     if (!db) {
       return Promise.resolve({
-        count: 0,
-        rows: [],
-        page: searchQuery.pagination?.page || 1,
-        pageSize: searchQuery.pagination?.pageSize || 0,
+        results: [],
+        totalNumberOfResults: 0,
+        numberOfResultsReturned: 0,
+        maximumNumberOfResultsPerPage: requestedPageSize,
+        page: requestedPage,
       });
     }
 
@@ -203,38 +207,43 @@ export class ExpenseRepository {
 
       request.onsuccess = (event) => {
         let items = (event.target as IDBRequest).result as Expense[];
-        const totalItems = items.length;
 
-        // Basic filtering: Assumes filter.query is a string to search in 'description' or 'category'
-        // This is a simplified example. Real-world SearchQuery might be more complex.
+        // Basic filtering
         if (searchQuery.filter && typeof searchQuery.filter.query === 'string' && searchQuery.filter.query.trim() !== '') {
-          const query = searchQuery.filter.query.toLowerCase().trim();
+          const queryStr = searchQuery.filter.query.toLowerCase().trim();
           items = items.filter(item =>
-            (item.description && item.description.toLowerCase().includes(query)) ||
-            (item.category && item.category.toLowerCase().includes(query))
+            (item.description && item.description.toLowerCase().includes(queryStr)) ||
+            (item.category && item.category.toLowerCase().includes(queryStr))
           );
         }
 
-        // Sorting (Example: by createdAt descending if no specific sort in searchQuery)
-        // A more robust implementation would parse searchQuery.sort
+        // Sorting (Example: by createdAt descending)
         items.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
 
+        const totalFilteredItems = items.length;
 
-        const page = searchQuery.pagination?.page || 1;
-        const pageSize = searchQuery.pagination?.pageSize || items.length; // Default to all items if no pageSize
-
-        const paginatedItems = items.slice((page - 1) * pageSize, page * pageSize);
+        const paginatedItems = items.slice((requestedPage - 1) * requestedPageSize, requestedPage * requestedPageSize);
 
         resolve({
-          count: items.length, // Count of filtered items
-          rows: paginatedItems,
-          page: page,
-          pageSize: pageSize,
+          results: paginatedItems,
+          totalNumberOfResults: totalFilteredItems,
+          numberOfResultsReturned: paginatedItems.length,
+          maximumNumberOfResultsPerPage: requestedPageSize,
+          page: requestedPage,
         });
       };
 
       request.onerror = (event) => {
-        reject((event.target as IDBRequest).error);
+        // Consider how to map IDBRequest error to a SearchResult or reject appropriately
+        // For now, let's return an empty result on error, similar to other handlers.
+        console.error('IndexedDB getAll error:', (event.target as IDBRequest).error);
+        resolve({ // Or reject? For now, resolve with empty to match other paths.
+          results: [],
+          totalNumberOfResults: 0,
+          numberOfResultsReturned: 0,
+          maximumNumberOfResultsPerPage: requestedPageSize,
+          page: requestedPage,
+        });
       };
     });
   }
