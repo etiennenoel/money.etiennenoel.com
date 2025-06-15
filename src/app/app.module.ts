@@ -31,6 +31,9 @@ import {LabelsProvider} from './providers/labels.provider';
 import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
 
+// Import the PdfProcessor service
+import { PdfProcessor } from './services/pdf.processor';
+
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -88,6 +91,7 @@ import {ImportStatementPage} from './pages/import-statement/import-statement.pag
     // Providers
     CategoriesProvider,
     LabelsProvider,
+    PdfProcessor, // Add PdfProcessor here
 
     // Stores,
     ToastStore,
