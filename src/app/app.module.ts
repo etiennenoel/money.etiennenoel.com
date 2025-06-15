@@ -12,7 +12,7 @@ import {IndexPage} from './pages/index/index.page';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
 import { ExpenseListPage } from './pages/expense-list/expense-list.page';
-import {ExpenseRepository} from './repositories/expense-repository';
+import {ExpenseRepository} from './repositories/expense.repository';
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 import {SidebarComponent} from './components/sidebar/sidebar.component';

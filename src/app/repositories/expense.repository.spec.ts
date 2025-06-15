@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { ExpenseRepository } from './expense-repository';
+import { ExpenseRepository } from './expense.repository';
 import { Expense } from '../interfaces/expense.interface';
 
 describe('ExpenseRepository', () => {
@@ -42,7 +42,7 @@ describe('ExpenseRepository', () => {
             console.warn("Delete database blocked:", event);
             // Attempt to force close and retry or just resolve and hope for the best
             // This can happen if connections are not properly closed.
-            resolve(); 
+            resolve();
         };
     });
   });

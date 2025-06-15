@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ExpenseRepository } from '../repositories/expense-repository';
+import { ExpenseRepository } from '../repositories/expense.repository';
 import { Expense } from '../interfaces/expense.interface';
 
 @Injectable({

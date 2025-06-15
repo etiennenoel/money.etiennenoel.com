@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ExpenseRepository } from '../../repositories/expense-repository';
+import { ExpenseRepository } from '../../repositories/expense.repository';
 import { ToastStore } from '../../stores/toast.store';
 import { Expense } from '../../interfaces/expense.interface';
 import { ToastMessageInterface } from '../../interfaces/toast-message.interface';

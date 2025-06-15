@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, PLATFORM_ID, Optional } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Expense } from '../../interfaces/expense.interface';
-import { ExpenseRepository } from '../../repositories/expense-repository';
+import { ExpenseRepository } from '../../repositories/expense.repository';
 import { MOCK_EXPENSES } from '../../stores/mock-expenses';
 import { Injector } from '@angular/core'; // Import Injector
 
