@@ -176,7 +176,7 @@ export class ExpenseRepository {
   }
 
   async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {
-    const requestedPageSize = searchQuery.limit || 10; // Default page size
+    const requestedPageSize = searchQuery.maxResults || 10; // Default page size
     const requestedPage = searchQuery.page || 1;
 
     if (!isPlatformBrowser(this.platformId)) {
@@ -208,12 +208,20 @@ export class ExpenseRepository {
       request.onsuccess = (event) => {
         let items = (event.target as IDBRequest).result as Expense[];
 
-        // Basic filtering
-        if (searchQuery.filters && typeof searchQuery.filters.query === 'string' && searchQuery.filters.query.trim() !== '') {
-          const queryStr = searchQuery.filters.query.toLowerCase().trim();
+        let queryStr = '';
+        if (searchQuery.filters && searchQuery.filters.length > 0) {
+          // Assumption: The first filter's 'value' is the search term.
+          // This might need to be more sophisticated based on actual SearchFieldFilter structure.
+          const firstFilter = searchQuery.filters[0] as any; // Use 'as any' for now due to unknown structure
+          if (firstFilter && typeof firstFilter.value === 'string') {
+            queryStr = firstFilter.value.toLowerCase().trim();
+          }
+        }
+
+        if (queryStr !== '') {
           items = items.filter(item =>
             (item.description && item.description.toLowerCase().includes(queryStr)) ||
-            (item.category && item.category.toLowerCase().includes(queryStr))
+            (item.categories && item.categories.some(cat => cat.toLowerCase().includes(queryStr)))
           );
         }
 
