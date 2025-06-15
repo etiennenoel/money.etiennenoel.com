@@ -5,6 +5,7 @@ import { ExpenseListPage } from './pages/expense-list/expense-list.page'; // Imp
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 import {RootComponent} from './components/root/root.component';
 import {LayoutComponent} from './components/layout/layout.component';
+import {ImportStatementPage} from './pages/import-statement/import-statement.page';
 
 const routes: Routes = [
   {
@@ -26,7 +27,11 @@ const routes: Routes = [
           {
             path: 'expenses/create',
             component: CreateExpensePage
-          }
+          },
+          {
+            path: 'import-statement',
+            component: ImportStatementPage
+          },
         ]
       }
     ],

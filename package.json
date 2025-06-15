@@ -24,6 +24,7 @@
     "@magieno/angular-core": "^0.0.6",
     "@magieno/angular-advanced-forms": "^0.0.29",
     "@magieno/common": "^1.0.24",
+    "@magieno/angular-drag-and-drop": "^0.0.2",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",

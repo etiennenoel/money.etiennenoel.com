@@ -28,6 +28,8 @@ import {MagienoAdvancedFormsModule} from '@magieno/angular-advanced-forms';
 import {provideTranslateService, TranslateModule} from '@ngx-translate/core';
 import {CategoriesProvider} from './providers/categories.provider';
 import {LabelsProvider} from './providers/labels.provider';
+import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
+import {ImportStatementPage} from './pages/import-statement/import-statement.page';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import {LabelsProvider} from './providers/labels.provider';
     IndexPage,
     ExpenseListPage,
     CreateExpensePage,
+    ImportStatementPage,
 
     // Components
     CreateExpenseComponent,
@@ -62,6 +65,7 @@ import {LabelsProvider} from './providers/labels.provider';
 
     MagienoCoreModule,
     MagienoAdvancedFormsModule,
+    MagienoDragAndDropComponent,
 
     TranslateModule,
   ],

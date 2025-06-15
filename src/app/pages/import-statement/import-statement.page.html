@@ -1,0 +1,27 @@
+<div class="page-header">
+  <div class="row align-items-center">
+    <div class="col">
+      <h1 class="page-header-title">Import Statement</h1>
+    </div>
+    <!-- End Col -->
+
+    <!-- End Col -->
+  </div>
+  <!-- End Row -->
+</div>
+
+@if(state === ImportStatementStateEnum.WaitingForStatement) {
+<div class="row">
+  <h2><i class="bi bi-bank"></i> Import a bank/credit card statement</h2>
+  <!-- Add drag and drop component -->
+  <magieno-drag-and-drop (onFileSystemHandlesDropped)="onFileSystemHandlesDropped($event)" class="d-block"
+                         style="height: 150px;">
+    <div class="d-flex flex-column h-100 w-100">
+      <div class="align-content-center flex-fill">
+
+        Click or drag and drop a <strong><i class="bi bi-filetype-csv"></i>.csv</strong> or <strong><i class="bi bi-filetype-pdf"></i>.pdf</strong> credit card statement file here
+      </div>
+    </div>
+  </magieno-drag-and-drop>
+</div>
+}
