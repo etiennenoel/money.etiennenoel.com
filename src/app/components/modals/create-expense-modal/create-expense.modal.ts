@@ -14,6 +14,8 @@ import {CreateExpenseOptions} from "../../../options/create-expense.options";
 })
 export class CreateExpenseModal extends BaseComponent implements OnInit {
 
+  searchCategory: string = "";
+
   isCreateExpenseDisabled: boolean = false;
 
   protected form: AdvancedForm<CreateExpenseOptions>;
@@ -30,6 +32,10 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
 
   override ngOnInit() {
     super.ngOnInit();
+  }
+
+  createNewCategory(query: string) {
+    console.log("New category" + query);
   }
 
   createExpense() {

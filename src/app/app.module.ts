@@ -25,6 +25,8 @@ import {CreateExpenseModal} from './components/modals/create-expense-modal/creat
 import {MagienoCoreModule} from '@magieno/angular-core';
 import {MagienoAdvancedFormsModule} from '@magieno/angular-advanced-forms';
 import {provideTranslateService, TranslateModule} from '@ngx-translate/core';
+import {CategoriesProvider} from './providers/categories.provider';
+import {LabelsProvider} from './providers/labels.provider';
 
 @NgModule({
   declarations: [
@@ -77,6 +79,11 @@ import {provideTranslateService, TranslateModule} from '@ngx-translate/core';
     // Managers
     ExpenseManager,
 
+    // Providers
+    CategoriesProvider,
+    LabelsProvider,
+
+    // Stores,
     ToastStore,
   ],
   bootstrap: [RootComponent]

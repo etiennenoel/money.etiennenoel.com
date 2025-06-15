@@ -1,9 +1,12 @@
-import { advancedFormControl, FieldType } from '@magieno/common';
+import { advancedFormControl, FieldType , FormControlTypeEnum} from '@magieno/common';
 import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from '@pristine-ts/class-validator';
 import {FormDate} from '@magieno/angular-advanced-forms';
+import {CategoriesProvider} from '../providers/categories.provider';
+import {LabelsProvider} from '../providers/labels.provider';
 
 export class CreateExpenseOptions {
   @advancedFormControl({
+    type: FormControlTypeEnum.Input,
     fieldType: FieldType.Money,
     displayableElements: {
       labelTitle: 'Amount',
@@ -15,6 +18,7 @@ export class CreateExpenseOptions {
   amount: number = 0;
 
   @advancedFormControl({
+    type: FormControlTypeEnum.Input,
     fieldType: FieldType.Date,
     displayableElements: {
       labelTitle: 'Transaction Date',
@@ -24,6 +28,7 @@ export class CreateExpenseOptions {
   transactionDate!: FormDate;
 
   @advancedFormControl({
+    type: FormControlTypeEnum.Input,
     fieldType: FieldType.String,
     displayableElements: {
       labelTitle: 'Location',
@@ -34,6 +39,7 @@ export class CreateExpenseOptions {
   location!: string;
 
   @advancedFormControl({
+    type: FormControlTypeEnum.Input,
     fieldType: FieldType.String,
     displayableElements: {
       labelTitle: 'Description',
@@ -44,7 +50,11 @@ export class CreateExpenseOptions {
   description!: string;
 
   @advancedFormControl({
-    fieldType: FieldType.String,
+    type: FormControlTypeEnum.MultiSelect,
+    items: [{
+      id: "bbq_id",
+      label: "Barbecues"
+    }],
     displayableElements: {
       labelTitle: 'Categories',
     },
@@ -55,7 +65,8 @@ export class CreateExpenseOptions {
   categories!: string[];
 
   @advancedFormControl({
-    fieldType: FieldType.String,
+    type: FormControlTypeEnum.MultiSelect,
+    itemsProviderToken: LabelsProvider,
     displayableElements: {
       labelTitle: 'Labels',
     },
