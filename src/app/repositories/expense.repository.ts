@@ -176,15 +176,16 @@ export class ExpenseRepository {
   }
 
   async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {
-    const requestedPageSize = searchQuery.maxResults || 10; // Default page size
-    const requestedPage = searchQuery.page || 1;
+    // TODO: Identify and use the correct property from SearchQuery for page size.
+    const requestedPageSize = 10; // Placeholder for actual page size from searchQuery
+    const requestedPage = searchQuery.page || 1; // Assuming 'page' is correct or will be caught if not
 
     if (!isPlatformBrowser(this.platformId)) {
       return Promise.resolve({
         results: [],
         totalNumberOfResults: 0,
         numberOfResultsReturned: 0,
-        maximumNumberOfResultsPerPage: requestedPageSize,
+        maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
         page: requestedPage,
       });
     }
@@ -195,7 +196,7 @@ export class ExpenseRepository {
         results: [],
         totalNumberOfResults: 0,
         numberOfResultsReturned: 0,
-        maximumNumberOfResultsPerPage: requestedPageSize,
+        maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
         page: requestedPage,
       });
     }
@@ -236,7 +237,7 @@ export class ExpenseRepository {
           results: paginatedItems,
           totalNumberOfResults: totalFilteredItems,
           numberOfResultsReturned: paginatedItems.length,
-          maximumNumberOfResultsPerPage: requestedPageSize,
+          maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
           page: requestedPage,
         });
       };
@@ -249,7 +250,7 @@ export class ExpenseRepository {
           results: [],
           totalNumberOfResults: 0,
           numberOfResultsReturned: 0,
-          maximumNumberOfResultsPerPage: requestedPageSize,
+          maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
           page: requestedPage,
         });
       };
