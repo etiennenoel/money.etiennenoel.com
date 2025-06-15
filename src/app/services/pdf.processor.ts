@@ -1,48 +1,70 @@
-import { PDFDocument } from 'pdf-lib';
+// Import types and getDocument from pdf.js.
+// Note: The exact import path might vary depending on how pdf.js is installed/imported.
+// For example, if using a global script, it might be via `window['pdfjs-dist/build/pdf']`.
+// We'll assume it's available as an ES module import for this example.
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+// If using workerSrc:
+// pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// NOTE: While pdf-lib can load and manipulate PDFs, rendering pages to images typically requires
-// an additional library like 'canvas' or using a more comprehensive solution like 'pdf.js'.
-// The following implementation uses pdf-lib to load the document and access pages.
-// The actual image rendering part will be a placeholder as 'canvas' could not be installed.
 
 export class PdfProcessor {
-  constructor() {}
+  constructor() {
+    // It's good practice to set the workerSrc for pdf.js, especially for larger PDFs.
+    // This would typically be a path to the pdf.worker.js file hosted with your application
+    // or from a CDN. For this example, we'll comment it out but it's important for real usage.
+    // If you are managing dependencies yourself, ensure 'pdf.worker.js' is accessible.
+    // Example:
+    // if (typeof window !== 'undefined' && 'pdfjsLib' in window) {
+    //   (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${(window as any).pdfjsLib.version}/pdf.worker.min.js`;
+    // }
+  }
 
   async convertToImages(pdfFile: File): Promise<string[]> {
-    console.log('convertToImages called with:', pdfFile.name);
+    console.log('convertToImages (with pdf.js) called for:', pdfFile.name);
     const images: string[] = [];
+    const arrayBuffer = await pdfFile.arrayBuffer();
 
     try {
-      const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const numPages = pdfDoc.getPageCount();
+      // Load the PDF document using pdf.js
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdfDoc = await loadingTask.promise;
+      const numPages = pdfDoc.numPages;
 
-      for (let i = 0; i < numPages; i++) {
-        // const page = pdfDoc.getPage(i);
-        // At this point, you would typically use a library like 'canvas' or 'pdf.js'
-        // to render the 'page' object to an image.
-        // Example (conceptual, requires a rendering library):
-        // const canvas = createCanvas(page.getWidth(), page.getHeight());
-        // const context = canvas.getContext('2d');
-        // await page.render(context, { viewport: page.getViewport({ scale: 1.5 }) });
-        // const imageDataUrl = canvas.toDataURL('image/png');
-        // images.push(imageDataUrl);
+      console.log(`PDF loaded with ${numPages} pages.`);
 
-        // Placeholder for image data URL since rendering library is not available:
-        const placeholderImageUrl = `data:image/png;base64,${btoa(`Placeholder image for page ${i + 1}`)}`;
-        images.push(placeholderImageUrl);
-        console.log(`Processed page ${i + 1}/${numPages}. Placeholder image generated.`);
+      for (let i = 1; i <= numPages; i++) {
+        const page = await pdfDoc.getPage(i);
+        const viewport = page.getViewport({ scale: 1.5 }); // Use desired scale
+
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) {
+          throw new Error('Could not get canvas context');
+        }
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render the page onto the canvas
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+        await page.render(renderContext).promise;
+
+        // Add the image data URL to the array
+        images.push(canvas.toDataURL('image/png')); // Or 'image/jpeg'
+        console.log(`Rendered page ${i}/${numPages} to image.`);
+
+        // Clean up page resources
+        page.cleanup();
       }
-
-      if (numPages === 0) {
-        console.warn('The PDF document has no pages.');
-      }
-
       return images;
     } catch (error) {
-      console.error('Error processing PDF with pdf-lib:', error);
-      // Return an empty array or re-throw, depending on desired error handling
-      return [];
+      console.error('Error processing PDF with pdf.js:', error);
+      // Depending on requirements, either re-throw or return empty/partial results
+      return []; // Return empty array on error
     }
   }
 }
