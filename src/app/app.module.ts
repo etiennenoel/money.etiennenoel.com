@@ -13,6 +13,7 @@ import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
 import { ExpenseListPage } from './pages/expense-list/expense-list.page';
 import {ExpenseRepository} from './repositories/expense.repository';
+import { CategoryRepository } from './repositories/category.repository';
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
 import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
@@ -75,6 +76,7 @@ import {LabelsProvider} from './providers/labels.provider';
 
     // Repositories
     ExpenseRepository,
+    CategoryRepository,
 
     // Managers
     ExpenseManager,
