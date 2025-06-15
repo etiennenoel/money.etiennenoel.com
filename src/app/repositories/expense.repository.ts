@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Expense } from '../interfaces/expense.interface';
+import { SearchQuery, SearchResult } from '@pristine-ts/mysql-common';
 
 const DB_NAME = 'ExpenseDB';
 const STORE_NAME = 'expenses';
@@ -166,6 +167,70 @@ export class ExpenseRepository {
 
       request.onsuccess = () => {
         resolve();
+      };
+
+      request.onerror = (event) => {
+        reject((event.target as IDBRequest).error);
+      };
+    });
+  }
+
+  async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {
+    if (!isPlatformBrowser(this.platformId)) {
+      // Or handle as per project's error handling strategy for non-browser envs
+      return Promise.resolve({
+        count: 0,
+        rows: [],
+        page: searchQuery.pagination?.page || 1,
+        pageSize: searchQuery.pagination?.pageSize || 0, // or a default
+      });
+    }
+
+    const db = await this.dbPromise;
+    if (!db) {
+      return Promise.resolve({
+        count: 0,
+        rows: [],
+        page: searchQuery.pagination?.page || 1,
+        pageSize: searchQuery.pagination?.pageSize || 0,
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, 'readonly');
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.getAll();
+
+      request.onsuccess = (event) => {
+        let items = (event.target as IDBRequest).result as Expense[];
+        const totalItems = items.length;
+
+        // Basic filtering: Assumes filter.query is a string to search in 'description' or 'category'
+        // This is a simplified example. Real-world SearchQuery might be more complex.
+        if (searchQuery.filter && typeof searchQuery.filter.query === 'string' && searchQuery.filter.query.trim() !== '') {
+          const query = searchQuery.filter.query.toLowerCase().trim();
+          items = items.filter(item =>
+            (item.description && item.description.toLowerCase().includes(query)) ||
+            (item.category && item.category.toLowerCase().includes(query))
+          );
+        }
+
+        // Sorting (Example: by createdAt descending if no specific sort in searchQuery)
+        // A more robust implementation would parse searchQuery.sort
+        items.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+
+
+        const page = searchQuery.pagination?.page || 1;
+        const pageSize = searchQuery.pagination?.pageSize || items.length; // Default to all items if no pageSize
+
+        const paginatedItems = items.slice((page - 1) * pageSize, page * pageSize);
+
+        resolve({
+          count: items.length, // Count of filtered items
+          rows: paginatedItems,
+          page: page,
+          pageSize: pageSize,
+        });
       };
 
       request.onerror = (event) => {
