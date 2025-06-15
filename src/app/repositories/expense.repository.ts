@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Expense } from '../interfaces/expense.interface';
+import { SearchQuery, SearchResult } from '@pristine-ts/mysql-common';
 
 const DB_NAME = 'ExpenseDB';
 const STORE_NAME = 'expenses';
@@ -170,6 +171,88 @@ export class ExpenseRepository {
 
       request.onerror = (event) => {
         reject((event.target as IDBRequest).error);
+      };
+    });
+  }
+
+  async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {
+    // TODO: Identify and use the correct property from SearchQuery for page size.
+    const requestedPageSize = 10; // Placeholder for actual page size from searchQuery
+    const requestedPage = searchQuery.page || 1; // Assuming 'page' is correct or will be caught if not
+
+    if (!isPlatformBrowser(this.platformId)) {
+      return Promise.resolve({
+        results: [],
+        totalNumberOfResults: 0,
+        numberOfResultsReturned: 0,
+        maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
+        page: requestedPage,
+      });
+    }
+
+    const db = await this.dbPromise;
+    if (!db) {
+      return Promise.resolve({
+        results: [],
+        totalNumberOfResults: 0,
+        numberOfResultsReturned: 0,
+        maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
+        page: requestedPage,
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, 'readonly');
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.getAll();
+
+      request.onsuccess = (event) => {
+        let items = (event.target as IDBRequest).result as Expense[];
+
+        let queryStr = '';
+        if (searchQuery.filters && searchQuery.filters.length > 0) {
+          // Assumption: The first filter's 'value' is the search term.
+          // This might need to be more sophisticated based on actual SearchFieldFilter structure.
+          const firstFilter = searchQuery.filters[0] as any; // Use 'as any' for now due to unknown structure
+          if (firstFilter && typeof firstFilter.value === 'string') {
+            queryStr = firstFilter.value.toLowerCase().trim();
+          }
+        }
+
+        if (queryStr !== '') {
+          items = items.filter(item =>
+            (item.description && item.description.toLowerCase().includes(queryStr)) ||
+            (item.categories && item.categories.some(cat => cat.toLowerCase().includes(queryStr)))
+          );
+        }
+
+        // Sorting (Example: by createdAt descending)
+        items.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+
+        const totalFilteredItems = items.length;
+
+        const paginatedItems = items.slice((requestedPage - 1) * requestedPageSize, requestedPage * requestedPageSize);
+
+        resolve({
+          results: paginatedItems,
+          totalNumberOfResults: totalFilteredItems,
+          numberOfResultsReturned: paginatedItems.length,
+          maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
+          page: requestedPage,
+        });
+      };
+
+      request.onerror = (event) => {
+        // Consider how to map IDBRequest error to a SearchResult or reject appropriately
+        // For now, let's return an empty result on error, similar to other handlers.
+        console.error('IndexedDB getAll error:', (event.target as IDBRequest).error);
+        resolve({ // Or reject? For now, resolve with empty to match other paths.
+          results: [],
+          totalNumberOfResults: 0,
+          numberOfResultsReturned: 0,
+          maximumNumberOfResultsPerPage: requestedPageSize, // Use the placeholder
+          page: requestedPage,
+        });
       };
     });
   }
