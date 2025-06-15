@@ -176,7 +176,7 @@ export class ExpenseRepository {
   }
 
   async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {
-    const requestedPageSize = searchQuery.pageSize || 10; // Default page size
+    const requestedPageSize = searchQuery.limit || 10; // Default page size
     const requestedPage = searchQuery.page || 1;
 
     if (!isPlatformBrowser(this.platformId)) {
@@ -209,8 +209,8 @@ export class ExpenseRepository {
         let items = (event.target as IDBRequest).result as Expense[];
 
         // Basic filtering
-        if (searchQuery.filter && typeof searchQuery.filter.query === 'string' && searchQuery.filter.query.trim() !== '') {
-          const queryStr = searchQuery.filter.query.toLowerCase().trim();
+        if (searchQuery.filters && typeof searchQuery.filters.query === 'string' && searchQuery.filters.query.trim() !== '') {
+          const queryStr = searchQuery.filters.query.toLowerCase().trim();
           items = items.filter(item =>
             (item.description && item.description.toLowerCase().includes(queryStr)) ||
             (item.category && item.category.toLowerCase().includes(queryStr))
