@@ -51,10 +51,7 @@ export class CreateExpenseOptions {
 
   @advancedFormControl({
     type: FormControlTypeEnum.MultiSelect,
-    items: [{
-      id: "bbq_id",
-      label: "Barbecues"
-    }],
+    itemsProviderToken: CategoriesProvider,
     displayableElements: {
       labelTitle: 'Categories',
     },

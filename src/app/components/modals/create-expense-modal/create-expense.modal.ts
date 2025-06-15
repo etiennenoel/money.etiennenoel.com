@@ -33,11 +33,6 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
   override ngOnInit() {
     super.ngOnInit();
   }
-
-  createNewCategory(query: string) {
-    console.log("New category" + query);
-  }
-
   createExpense() {
 
   }
