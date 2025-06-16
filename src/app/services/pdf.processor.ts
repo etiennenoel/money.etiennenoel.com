@@ -1,11 +1,4 @@
-// Import types and getDocument from pdf.js.
-// Note: The exact import path might vary depending on how pdf.js is installed/imported.
-// For example, if using a global script, it might be via `window['pdfjs-dist/build/pdf']`.
-// We'll assume it's available as an ES module import for this example.
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
-// If using workerSrc:
-// pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
+import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
 export class PdfProcessor {
   constructor() {
@@ -26,7 +19,7 @@ export class PdfProcessor {
 
     try {
       // Load the PDF document using pdf.js
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const loadingTask = getDocument({ data: arrayBuffer });
       const pdfDoc = await loadingTask.promise;
       const numPages = pdfDoc.numPages;
 
