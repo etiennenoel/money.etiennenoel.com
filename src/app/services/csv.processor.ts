@@ -7,7 +7,12 @@ export class CsvProcessorService {
 
   constructor() { }
 
-  processCsv(csvData: string): Record<string, string>[] {
+  async processCsv(file: File): Promise<Record<string, string>[]> {
+    if (!file) {
+      return [];
+    }
+
+    const csvData = await file.text();
     if (!csvData) {
       return [];
     }
