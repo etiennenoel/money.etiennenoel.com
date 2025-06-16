@@ -6,6 +6,7 @@ import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CreateExpenseModal} from '../../components/modals/create-expense-modal/create-expense.modal';
 import {ImportStatementStateEnum} from '../../enums/import-statement-state.enum';
+import { StatementImporter } from '../../importers/statement.importer';
 
 @Component({
   selector: 'app-import-statement',
@@ -23,6 +24,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     protected readonly router: Router,
     protected readonly ngbModal: NgbModal,
     title: Title,
+    private readonly statementImporter: StatementImporter
   ) {
     super(document, title);
   }
@@ -43,6 +45,15 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
       const file = await fileSystemFileHandle.getFile()
 
       console.log("Yesh")
+
+      // TODO: Add checks for file type and error handling
+      this.statementImporter.process(file).then(expenseOptions => {
+        console.log('Imported expense options:', expenseOptions);
+        // TODO: Set state to processing and then to display results
+      }).catch(error => {
+        console.error('Error processing statement:', error);
+        // TODO: Set state to error
+      });
 
       // if (file.type.startsWith("audio")) {
       //   this.fileSystemFileHandle = fileSystemHandle as FileSystemFileHandle;
