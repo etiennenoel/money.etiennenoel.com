@@ -32,6 +32,9 @@ import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
 import { CsvProcessorService } from './services/csv.processor';
 
+// Import the PdfProcessor service
+import { PdfProcessor } from './services/pdf.processor';
+
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -89,6 +92,7 @@ import { CsvProcessorService } from './services/csv.processor';
     // Providers
     CategoriesProvider,
     LabelsProvider,
+    PdfProcessor, // Add PdfProcessor here
 
     // Stores,
     ToastStore,
