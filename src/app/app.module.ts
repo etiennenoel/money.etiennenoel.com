@@ -31,6 +31,7 @@ import {LabelsProvider} from './providers/labels.provider';
 import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
 import { CsvProcessorService } from './services/csv.processor';
+import { PromptService } from './services/prompt.service';
 
 // Import the PdfProcessor service
 import { PdfProcessor } from './services/pdf.processor';
@@ -99,6 +100,7 @@ import { PdfProcessor } from './services/pdf.processor';
 
     // Services
     CsvProcessorService,
+    PromptService,
   ],
   bootstrap: [RootComponent]
 })
