@@ -2,7 +2,7 @@ import { CreateExpenseOptions } from '../options/create-expense.options';
 import { Injectable } from '@angular/core';
 import { CsvProcessorService } from '../services/csv.processor';
 import { PdfProcessor } from '../services/pdf.processor';
-import { PromptService } from '../services/prompt.service';
+import { LanguageModel } from 'prompt-api';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,7 @@ import { PromptService } from '../services/prompt.service';
 export class StatementImporter {
   constructor(
     private csvProcessor: CsvProcessorService,
-    private pdfProcessor: PdfProcessor,
-    private promptService: PromptService
+    private pdfProcessor: PdfProcessor
   ) {}
 
   async process(file: File): Promise<CreateExpenseOptions[]> {
@@ -27,7 +26,8 @@ export class StatementImporter {
       const properties = Object.keys(new CreateExpenseOptions());
 
       const mappingPrompt = `Given the CSV headers: ${headers.join(', ')}, map them to the following properties: ${properties.join(', ')}. Provide the mapping as a JSON object where keys are CSV headers and values are property names.`;
-      const mappingConfig = await this.promptService.prompt(mappingPrompt);
+      const session = await LanguageModel.create();
+      const mappingConfig = await session.prompt(mappingPrompt);
 
       let parsedMapping: Record<string, string>;
       try {
@@ -68,7 +68,8 @@ export class StatementImporter {
         const extractionPrompt = `Extract expense data from the provided image (represented by: ${image}). Please provide the data as a JSON object with the following properties: ${properties.join(', ')}. If a property is not applicable, you can omit it or set its value to null.`;
 
         try {
-          const extractedDataString = await this.promptService.prompt(extractionPrompt);
+          const session = await LanguageModel.create();
+          const extractedDataString = await session.prompt(extractionPrompt);
           if (extractedDataString) {
             const parsedData = JSON.parse(extractedDataString);
             // We might get a single expense object or an array of them
