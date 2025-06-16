@@ -16,8 +16,7 @@ export class StatementImporter {
     console.log('Processing file in StatementImporter:', file.name);
 
     if (file.type === 'text/csv') {
-      const csvData = await file.text();
-      const records = this.csvProcessor.processCsv(csvData);
+      const records = await this.csvProcessor.processCsv(file); // Changed this line
       // TODO: Convert records to CreateExpenseOptions[]
       console.log('CSV records:', records);
       return Promise.resolve([]); // Placeholder
