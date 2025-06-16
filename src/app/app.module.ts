@@ -30,6 +30,7 @@ import {CategoriesProvider} from './providers/categories.provider';
 import {LabelsProvider} from './providers/labels.provider';
 import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
+import { CsvProcessorService } from './services/csv.processor';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,9 @@ import {ImportStatementPage} from './pages/import-statement/import-statement.pag
 
     // Stores,
     ToastStore,
+
+    // Services
+    CsvProcessorService,
   ],
   bootstrap: [RootComponent]
 })
