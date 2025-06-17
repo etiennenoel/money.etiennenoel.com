@@ -1,4 +1,5 @@
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
+GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
 
 export class PdfProcessor {
   constructor() {
@@ -12,9 +13,10 @@ export class PdfProcessor {
     // }
   }
 
-  async convertToImages(pdfFile: File): Promise<string[]> {
+  async convertToImages(pdfFile: File): Promise<ImageBitmap[]> {
     console.log('convertToImages (with pdf.js) called for:', pdfFile.name);
-    const images: string[] = [];
+    const images: ImageBitmap[] = [];
+
     const arrayBuffer = await pdfFile.arrayBuffer();
 
     try {
@@ -27,7 +29,7 @@ export class PdfProcessor {
 
       for (let i = 1; i <= numPages; i++) {
         const page = await pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 }); // Use desired scale
+        const viewport = page.getViewport({ scale: 1 }); // Use desired scale
 
         // Create a canvas element
         const canvas = document.createElement('canvas');
@@ -47,7 +49,7 @@ export class PdfProcessor {
         await page.render(renderContext).promise;
 
         // Add the image data URL to the array
-        images.push(canvas.toDataURL('image/png')); // Or 'image/jpeg'
+        images.push(await createImageBitmap(canvas)); // Or 'image/jpeg'
         console.log(`Rendered page ${i}/${numPages} to image.`);
 
         // Clean up page resources
