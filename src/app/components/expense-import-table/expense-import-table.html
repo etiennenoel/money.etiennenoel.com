@@ -1,0 +1,26 @@
+<table>
+  <thead>
+    <tr>
+      <th>Amount</th>
+      <th>Transaction Date</th>
+      <th>Location</th>
+      <th>Description</th>
+      <th>Categories</th>
+      <th>Labels</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let expense of expenseOptions; let i = index">
+      <td><input type="number" [(ngModel)]="expense.amount" name="amount_{{i}}"></td>
+      <td><input type="date" [(ngModel)]="expense.transactionDate" name="transactionDate_{{i}}"></td>
+      <td><input type="text" [(ngModel)]="expense.location" name="location_{{i}}"></td>
+      <td><input type="text" [(ngModel)]="expense.description" name="description_{{i}}"></td>
+      <td><input type="text" [(ngModel)]="expense.categories" name="categories_{{i}}"></td>
+      <td><input type="text" [(ngModel)]="expense.labels" name="labels_{{i}}"></td>
+      <td><button (click)="deleteExpenseOption(i)">Delete</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<button (click)="addExpenseOption()">Add New Expense</button>
