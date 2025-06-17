@@ -34,6 +34,8 @@ import { CsvProcessorService } from './processors/csv.processor';
 
 // Import the PdfProcessor service
 import { PdfProcessor } from './processors/pdf.processor';
+// Import the ImageProcessorService
+import { ImageProcessorService } from './processors/image.processor';
 
 @NgModule({
   declarations: [
@@ -99,6 +101,7 @@ import { PdfProcessor } from './processors/pdf.processor';
 
     // Services
     CsvProcessorService,
+    ImageProcessorService, // Add ImageProcessorService here
   ],
   bootstrap: [RootComponent]
 })
