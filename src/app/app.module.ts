@@ -30,10 +30,10 @@ import {CategoriesProvider} from './providers/categories.provider';
 import {LabelsProvider} from './providers/labels.provider';
 import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
-import { CsvProcessorService } from './services/csv.processor';
+import { CsvProcessorService } from './processors/csv.processor';
 
 // Import the PdfProcessor service
-import { PdfProcessor } from './services/pdf.processor';
+import { PdfProcessor } from './processors/pdf.processor';
 
 @NgModule({
   declarations: [

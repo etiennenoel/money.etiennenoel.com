@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ai.etiennenoel.com": {
+    "money.etiennenoel.com": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ai.etiennenoel.com",
+            "outputPath": "dist/money.etiennenoel.com",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -37,6 +37,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "pdf.worker.mjs",
+                "input": "node_modules/pdfjs-dist/build/"
               }
             ],
             "styles": [
@@ -86,10 +90,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ai.etiennenoel.com:build:production"
+              "buildTarget": "money.etiennenoel.com:build:production"
             },
             "development": {
-              "buildTarget": "ai.etiennenoel.com:build:development"
+              "buildTarget": "money.etiennenoel.com:build:development"
             }
           },
           "defaultConfiguration": "development",
