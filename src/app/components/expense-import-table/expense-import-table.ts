@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CreateExpenseOptions } from '../../../options/create-expense.options';
+import { CreateExpenseOptions } from '../../options/create-expense.options';
 
 @Component({
   selector: 'app-expense-import-table',
