@@ -4,6 +4,7 @@ import { CsvPreviewData } from '../../processors/csv.processor';
 
 @Component({
   selector: 'app-statement-preview',
+  standalone: false, // Added this line
   templateUrl: './statement-preview.component.html',
   styleUrls: ['./statement-preview.component.scss']
 })
