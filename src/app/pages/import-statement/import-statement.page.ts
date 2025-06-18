@@ -78,7 +78,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
             this.processingError = "CSV file appears to be empty or does not contain headers.";
             this.state = ImportStatementStateEnum.WaitingForStatement;
         } else {
-            this.state = ImportStatementStateEnum.PreviewingStatement; // UPDATED STATE
+            this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
         }
       } else {
         this.processingError = "Could not generate preview for this file type or the file is empty/corrupted.";
@@ -95,7 +95,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   async confirmAndProcessStatement() {
     if (!this.currentFile) {
       this.processingError = "No file selected for processing.";
-      this.state = this.previewData ? ImportStatementStateEnum.PreviewingStatement : ImportStatementStateEnum.WaitingForStatement; // UPDATED STATE
+      this.state = this.previewData ? ImportStatementStateEnum.PREVIEWING_STATEMENT : ImportStatementStateEnum.WaitingForStatement; // UPDATED STATE
       return;
     }
 
@@ -110,12 +110,12 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
          this.state = ImportStatementStateEnum.StatementProcessed;
       } else {
          this.processingError = "No expenses found in the statement, or an error occurred during processing.";
-         this.state = ImportStatementStateEnum.PreviewingStatement; // UPDATED STATE
+         this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
       }
     } catch (error) {
       console.error('Error processing statement with LLM:', error);
       this.processingError = "A critical error occurred while processing the statement with AI. Please try again.";
-      this.state = ImportStatementStateEnum.PreviewingStatement; // UPDATED STATE
+      this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
     }
   }
 

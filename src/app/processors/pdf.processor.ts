@@ -27,13 +27,13 @@ export class PdfProcessor {
     try {
       // Load the PDF document using pdf.js
       const loadingTask = getDocument({ data: arrayBuffer });
-      const pdfDoc = await loadingTask.promise;
+      const pdfDoc: PDFDocumentProxy = await loadingTask.promise; // Added type for clarity
       const numPages = pdfDoc.numPages;
 
       console.log(`PDF loaded with ${numPages} pages.`);
 
       for (let i = 1; i <= numPages; i++) {
-        const page = await pdfDoc.getPage(i);
+        const page: PDFPageProxy = await pdfDoc.getPage(i); // Added type for clarity
         const viewport = page.getViewport({ scale: 1 }); // Use desired scale
 
         // Create a canvas element
@@ -65,50 +65,6 @@ export class PdfProcessor {
       console.error('Error processing PDF with pdf.js:', error);
       // Depending on requirements, either re-throw or return empty/partial results
       return []; // Return empty array on error
-    }
-  }
-
-  async extractImagesAsBase64(pdfFile: File): Promise<string[]> {
-    console.log('extractPreview (for PDF) called for:', pdfFile.name);
-    const base64Images: string[] = [];
-    const arrayBuffer = await pdfFile.arrayBuffer();
-
-    try {
-      const loadingTask = getDocument({ data: arrayBuffer });
-      const pdfDoc: PDFDocumentProxy = await loadingTask.promise;
-      const numPages = pdfDoc.numPages;
-
-      console.log(`PDF loaded for preview with ${numPages} pages.`);
-
-      for (let i = 1; i <= numPages; i++) {
-        const page: PDFPageProxy = await pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 }); // Using a moderate scale
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) {
-          console.error('Could not get canvas context for page ' + i + ' during preview extraction.');
-          continue;
-        }
-
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport,
-        };
-        await page.render(renderContext).promise;
-
-        base64Images.push(canvas.toDataURL('image/png'));
-        console.log(`Extracted preview for page ${i}/${numPages}.`);
-
-        page.cleanup();
-      }
-      return base64Images;
-    } catch (error) {
-      console.error('Error processing PDF for preview extraction:', error);
-      return [];
     }
   }
 }

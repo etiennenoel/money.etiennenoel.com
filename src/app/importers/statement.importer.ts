@@ -5,7 +5,7 @@ import { PdfProcessor } from '../processors/pdf.processor';
 import { ImageProcessorService } from '../processors/image.processor';
 
 // Define PreviewData type
-export type PreviewData = CsvPreviewData | string[] | string | null;
+export type PreviewData = CsvPreviewData | ImageBitmap | ImageBitmap[] | null;
 
 @Injectable({
   providedIn: 'root'
@@ -36,11 +36,11 @@ export class StatementImporter {
   async extractPreviewData(file: File): Promise<PreviewData> {
     console.log('Extracting preview data for:', file.name, file.type);
     if (file.type === 'text/csv') {
-      return this.csvProcessor.processData(file);
+      return this.csvProcessor.parseStructured(file);
     } else if (file.type === 'application/pdf') {
-      return this.pdfProcessor.extractImagesAsBase64(file);
+      return this.pdfProcessor.convertToImages(file);
     } else if (file.type.startsWith('image/')) {
-      return this.imageProcessor.convertToBase64(file);
+      return this.imageProcessor.processImage(file);
     } else {
       console.warn('Unsupported file type for preview:', file.type);
       return null;
@@ -94,10 +94,14 @@ export class StatementImporter {
     };
 
     if (file.type === 'text/csv') {
-      const records = await this.csvProcessor.processCsv(file);
-      if (!records || records.length === 0) return [];
-      const headers = Object.keys(records[0]);
-      const mappingPrompt = `Given the CSV headers: ${headers.join(', ')}, map them to the following properties: ${properties.join(', ')}. Provide the mapping as a JSON object where keys are CSV headers and values are property names.`;
+      const csvResult = await this.csvProcessor.parseStructured(file); // Use the new method
+      if (!csvResult || csvResult.rows.length === 0) return [];
+
+      const headersForPrompt = csvResult.headers; // Use headers directly
+      const recordsToMap = csvResult.rows;      // Use rows for mapping
+
+      const mappingPrompt = `Given the CSV headers: ${headersForPrompt.join(', ')}, map them to the following properties: ${properties.join(', ')}. Provide the mapping as a JSON object where keys are CSV headers and values are property names.`;
+
       const mappingConfig = await session.prompt(mappingPrompt);
       let parsedMapping: Record<string, string>;
       try {
@@ -106,7 +110,8 @@ export class StatementImporter {
         console.error('Error parsing mapping configuration:', error);
         return [];
       }
-      return records.map(record => {
+
+      return recordsToMap.map(record => { // Map over csvResult.rows
         const expenseOptions = new CreateExpenseOptions();
         for (const header in parsedMapping) {
           if (record.hasOwnProperty(header) && expenseOptions.hasOwnProperty(parsedMapping[header])) {

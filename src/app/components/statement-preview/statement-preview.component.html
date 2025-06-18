@@ -15,19 +15,23 @@
     </table>
   </div>
 
-  <div *ngIf="!isCsvData && imageUrls.length > 0">
+  <!-- Changed to render ImageBitmaps on canvas -->
+  <div *ngIf="!isCsvData && imageBitmapsToRender.length > 0">
     <h5>Image Preview</h5>
-    <div *ngFor="let imageUrl of imageUrls" class="image-preview-container">
-      <img [src]="imageUrl" alt="Statement Page Preview" width="768" height="768" style="width: 768px; height: 768px; object-fit: fill; border: 1px solid #ccc; margin-bottom: 10px;">
+    <div *ngFor="let bitmap of imageBitmapsToRender; let i = index" class="image-preview-container">
+      <canvas #previewCanvas class="preview-canvas" style="border: 1px solid #ccc; margin-bottom: 10px;"></canvas>
+      <!-- Width and height are set in drawImages method to 768x768 -->
     </div>
   </div>
 
-  <div *ngIf="!isCsvData && imageUrls.length === 0 && previewData && typeof previewData === 'string'">
-     <p>No preview available for this image type or image is empty.</p>
+  <!-- Updated empty state check for images -->
+  <div *ngIf="!isCsvData && imageBitmapsToRender.length === 0 && previewData && (previewData instanceof ImageBitmap || (Array.isArray(previewData) && previewData.every(item => item instanceof ImageBitmap)))">
+     <p>No images to display for preview, or image data is empty.</p>
   </div>
- <div *ngIf="isCsvData && csvHeaders.length === 0 && csvRows.length === 0 && previewData">
+  <!-- More specific empty state for CSV -->
+  <div *ngIf="isCsvData && csvHeaders.length === 0 && csvRows.length === 0 && previewData && !imageBitmapsToRender.length">
      <p>CSV file seems to be empty or has no headers.</p>
- </div>
+  </div>
 
 </div>
 <div *ngIf="!previewData">

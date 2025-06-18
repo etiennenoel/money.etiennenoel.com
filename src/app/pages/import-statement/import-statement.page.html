@@ -36,7 +36,7 @@
         </magieno-drag-and-drop>
       </div>
     </div>
-  } @else if (state === ImportStatementStateEnum.PreviewingStatement) { <!-- RENAMED STATE -->
+  } @else if (state === ImportStatementStateEnum.PREVIEWING_STATEMENT) { <!-- RENAMED STATE -->
     <div class="row">
       <div class="col-12">
         <h4 class="mb-3">Statement Preview</h4>
@@ -92,7 +92,7 @@
   <!-- Fallback for any other unhandled state, only if not loading preview -->
   <div *ngIf="![
     ImportStatementStateEnum.WaitingForStatement,
-    ImportStatementStateEnum.PreviewingStatement, <!-- UPDATED -->
+    ImportStatementStateEnum.PREVIEWING_STATEMENT, <!-- UPDATED -->
     ImportStatementStateEnum.ProcessingStatement,
     ImportStatementStateEnum.StatementProcessed,
     ImportStatementStateEnum.ReviewExpensesFound
