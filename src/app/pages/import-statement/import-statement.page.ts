@@ -6,6 +6,7 @@ import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImportStatementStateEnum} from '../../enums/import-statement-state.enum';
 import { StatementImporter, PreviewData } from '../../importers/statement.importer';
+import { CreateExpenseOptions } from '../../options/create-expense.options';
 
 @Component({
   selector: 'app-import-statement',
@@ -19,6 +20,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   previewData: PreviewData | null = null;
   currentFile: File | null = null;
   processingError: string | null = null;
+  expenseOptions: CreateExpenseOptions[] = [];
 
   constructor(
     @Inject(DOCUMENT) document: Document,
@@ -99,11 +101,11 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     this.processingError = null;
 
     try {
-      const expenseOptions = await this.statementImporter.processStatementForLLM(this.currentFile);
-      console.log('Processed expense options:', expenseOptions);
+      this.expenseOptions = await this.statementImporter.processStatementForLLM(this.currentFile);
+      console.log('Processed expense options:', this.expenseOptions);
 
-      if (expenseOptions && expenseOptions.length > 0) {
-         this.state = ImportStatementStateEnum.StatementProcessed;
+      if (this.expenseOptions && this.expenseOptions.length > 0) {
+         this.state = ImportStatementStateEnum.ReviewExpensesFound;
       } else {
          this.processingError = "No expenses found in the statement, or an error occurred during processing.";
          this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
