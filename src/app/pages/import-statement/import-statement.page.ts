@@ -19,7 +19,6 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   previewData: PreviewData | null = null;
   currentFile: File | null = null;
   processingError: string | null = null;
-  isPreviewLoading: boolean = false; // Added isPreviewLoading
 
   constructor(
     @Inject(DOCUMENT) document: Document,
@@ -42,7 +41,6 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     this.previewData = null;
     this.currentFile = null;
     this.state = ImportStatementStateEnum.WaitingForStatement;
-    this.isPreviewLoading = false; // Reset
 
     if (!fileSystemHandles || fileSystemHandles.length === 0) {
         this.processingError = "No file provided.";
@@ -64,11 +62,10 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     const file = await fileSystemFileHandle.getFile();
     this.currentFile = file;
 
-    this.isPreviewLoading = true; // Indicate loading of preview
+    this.state = ImportStatementStateEnum.ProcessingStatement; // Set state to ProcessingStatement
 
     try {
       this.previewData = await this.statementImporter.extractPreviewData(file);
-      this.isPreviewLoading = false; // Preview loading finished
 
       if (this.previewData === null && file.type.startsWith('image/')) {
          this.processingError = "Could not generate preview for this image file. It might be corrupted or an unsupported image format.";
@@ -78,14 +75,13 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
             this.processingError = "CSV file appears to be empty or does not contain headers.";
             this.state = ImportStatementStateEnum.WaitingForStatement;
         } else {
-            this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
+            this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT;
         }
       } else {
         this.processingError = "Could not generate preview for this file type or the file is empty/corrupted.";
         this.state = ImportStatementStateEnum.WaitingForStatement;
       }
     } catch (error) {
-      this.isPreviewLoading = false; // Preview loading finished (with error)
       console.error('Error extracting preview data:', error);
       this.processingError = "Error generating file preview. Please try another file.";
       this.state = ImportStatementStateEnum.WaitingForStatement;
@@ -95,7 +91,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   async confirmAndProcessStatement() {
     if (!this.currentFile) {
       this.processingError = "No file selected for processing.";
-      this.state = this.previewData ? ImportStatementStateEnum.PREVIEWING_STATEMENT : ImportStatementStateEnum.WaitingForStatement; // UPDATED STATE
+      this.state = this.previewData ? ImportStatementStateEnum.PREVIEWING_STATEMENT : ImportStatementStateEnum.WaitingForStatement;
       return;
     }
 
