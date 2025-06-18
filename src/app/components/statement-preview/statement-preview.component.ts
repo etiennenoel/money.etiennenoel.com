@@ -20,6 +20,13 @@ export class StatementPreviewComponent implements OnChanges, AfterViewInit {
 
   private viewInitialized = false;
 
+  public get showEmptyImageState(): boolean {
+    return !this.isCsvData &&
+           this.imageBitmapsToRender.length === 0 &&
+           this.previewData !== null && // Ensure previewData is not null
+           (this.previewData instanceof ImageBitmap || this.isImageBitmapArray(this.previewData));
+  }
+
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
