@@ -24,4 +24,20 @@
     </div>
   </magieno-drag-and-drop>
 </div>
+} @else if (state === ImportStatementStateEnum.ProcessingStatement) {
+  <div class="row">
+    <div class="col-12 col-m6">
+      <h4>Preview</h4>
+
+      <!-- Jules: Replace this div below with the preview component -->
+      <div></div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      Processing
+    </div>
+  </div>
+
 }
