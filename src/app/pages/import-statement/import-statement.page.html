@@ -3,41 +3,103 @@
     <div class="col">
       <h1 class="page-header-title">Import Statement</h1>
     </div>
-    <!-- End Col -->
-
-    <!-- End Col -->
   </div>
-  <!-- End Row -->
 </div>
 
-@if(state === ImportStatementStateEnum.WaitingForStatement) {
-<div class="row">
-  <h2><i class="bi bi-bank"></i> Import a bank/credit card statement</h2>
-  <!-- Add drag and drop component -->
-  <magieno-drag-and-drop (onFileSystemHandlesDropped)="onFileSystemHandlesDropped($event)" class="d-block"
-                         style="height: 150px;">
-    <div class="d-flex flex-column h-100 w-100">
-      <div class="align-content-center flex-fill">
-
-        Click or drag and drop a <strong><i class="bi bi-filetype-csv"></i>.csv</strong> or <strong><i class="bi bi-filetype-pdf"></i>.pdf</strong> credit card statement file here
-      </div>
-    </div>
-  </magieno-drag-and-drop>
+<div *ngIf="processingError" class="alert alert-danger my-3" role="alert">
+  {{ processingError }}
 </div>
-} @else if (state === ImportStatementStateEnum.ProcessingStatement) {
-  <div class="row">
-    <div class="col-12 col-m6">
-      <h4>Preview</h4>
 
-      <!-- Jules: Replace this div below with the preview component -->
-      <div></div>
+<!-- Global Preview Loading Indicator -->
+<div *ngIf="isPreviewLoading" class="row justify-content-center text-center py-5">
+  <div class="col-auto">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Generating Preview...</span>
     </div>
-    <div class="col-12 col-md-6">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      Processing
-    </div>
+    <p class="mt-3 fs-5">Generating Preview...</p>
   </div>
+</div>
 
-}
+<!-- State-dependent content, only shown if not loading preview -->
+<div *ngIf="!isPreviewLoading">
+  @if(state === ImportStatementStateEnum.WaitingForStatement) {
+    <div class="row">
+      <div class="col-12">
+        <h2><i class="bi bi-file-earmark-arrow-up-fill"></i> Import a bank/credit card statement or receipt</h2>
+        <magieno-drag-and-drop (onFileSystemHandlesDropped)="onFileSystemHandlesDropped($event)" class="d-block"
+                              style="min-height: 200px; border: 2px dashed #ccc; padding: 20px; border-radius: 8px; background-color: #f9f9f9;">
+          <div class="d-flex flex-column justify-content-center align-items-center h-100 w-100 text-center">
+            <i class="bi bi-cloud-arrow-up-fill" style="font-size: 3rem; color: #0d6efd;"></i>
+            <p class="mt-3 mb-0 fs-5">Click or drag and drop a file here.</p>
+            <p class="text-muted">Supports <strong><i class="bi bi-filetype-csv"></i>.csv</strong>, <strong><i class="bi bi-filetype-pdf"></i>.pdf</strong>, or <strong>image</strong> files (e.g., .png, .jpg).</p>
+          </div>
+        </magieno-drag-and-drop>
+      </div>
+    </div>
+  } @else if (state === ImportStatementStateEnum.PREVIEWING_STATEMENT) { <!-- RENAMED STATE -->
+    <div class="row">
+      <div class="col-12">
+        <h4 class="mb-3">Statement Preview</h4>
+        <div class="card">
+          <div class="card-body">
+            <app-statement-preview [previewData]="previewData"></app-statement-preview>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <button class="btn btn-lg btn-primary me-3" (click)="confirmAndProcessStatement()">
+            <i class="bi bi-check-circle-fill me-2"></i>Confirm and Process Statement
+          </button>
+          <button class="btn btn-lg btn-outline-secondary" (click)="state = ImportStatementStateEnum.WaitingForStatement; previewData = null; currentFile = null; processingError = null; isPreviewLoading = false;"> <!-- Ensure isPreviewLoading is reset -->
+            <i class="bi bi-x-circle me-2"></i>Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else if (state === ImportStatementStateEnum.ProcessingStatement) {
+    <div class="row justify-content-center text-center py-5">
+      <div class="col-auto">
+        <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Processing Statement...</span>
+        </div>
+        <p class="mt-3 fs-5">Processing Statement with AI... Please wait.</p>
+      </div>
+    </div>
+  } @else if (state === ImportStatementStateEnum.StatementProcessed) {
+    <div class="row justify-content-center text-center py-5">
+      <div class="col-auto">
+        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+        <h4 class="mt-3">Statement Processed!</h4>
+        <p class="fs-5">Expenses found have been processed.</p>
+        <p class="text-muted">(Further steps like review or listing would follow here)</p>
+        <button class="btn btn-lg btn-info mt-3" (click)="state = ImportStatementStateEnum.WaitingForStatement; previewData = null; currentFile = null; processingError = null; isPreviewLoading = false;"> <!-- Ensure isPreviewLoading is reset -->
+          <i class="bi bi-file-earmark-arrow-up-fill me-2"></i>Import Another Statement
+        </button>
+      </div>
+    </div>
+  } @else if (state === ImportStatementStateEnum.ReviewExpensesFound) {
+      <div class="row justify-content-center text-center py-5">
+          <div class="col-12">
+            <i class="bi bi-card-list text-primary" style="font-size: 4rem;"></i>
+            <h4 class="mt-3">Review Expenses</h4>
+            <p class="fs-5">This state will show the expenses found for your review and approval.</p>
+            <button class="btn btn-lg btn-secondary mt-3" (click)="state = ImportStatementStateEnum.WaitingForStatement; previewData = null; currentFile = null; processingError = null; isPreviewLoading = false;"> <!-- Ensure isPreviewLoading is reset -->
+              <i class="bi bi-arrow-left-circle me-2"></i>Start Over
+            </button>
+          </div>
+      </div>
+  }
+
+  <!-- Fallback for any other unhandled state, only if not loading preview -->
+  <div *ngIf="![
+    ImportStatementStateEnum.WaitingForStatement,
+    ImportStatementStateEnum.PREVIEWING_STATEMENT,
+    ImportStatementStateEnum.ProcessingStatement,
+    ImportStatementStateEnum.StatementProcessed,
+    ImportStatementStateEnum.ReviewExpensesFound
+  ].includes(state)" class="alert alert-warning my-3">
+    <p><i class="bi bi-exclamation-triangle-fill me-2"></i>Unhandled application state. An unexpected error might have occurred.</p>
+    <button class="btn btn-secondary btn-sm" (click)="state = ImportStatementStateEnum.WaitingForStatement; previewData = null; currentFile = null; processingError = null; isPreviewLoading = false;"> <!-- Ensure isPreviewLoading is reset -->
+      <i class="bi bi-house-door me-2"></i>Reset to Start
+    </button>
+  </div>
+</div> <!-- End of *ngIf="!isPreviewLoading" -->

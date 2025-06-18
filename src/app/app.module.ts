@@ -37,6 +37,7 @@ import { PdfProcessor } from './processors/pdf.processor';
 // Import the ImageProcessorService
 import { ImageProcessorService } from './processors/image.processor';
 import { ExpenseImportTable } from './components/expense-import-table/expense-import-table';
+import { StatementPreviewComponent } from './components/statement-preview/statement-preview.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { ExpenseImportTable } from './components/expense-import-table/expense-im
 
     // Modals
     CreateExpenseModal,
-     ExpenseImportTable,
+    ExpenseImportTable,
+    StatementPreviewComponent,
   ],
   imports: [
     BrowserModule,

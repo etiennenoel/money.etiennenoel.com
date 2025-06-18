@@ -1,40 +1,45 @@
 import { Injectable } from '@angular/core';
 
+export interface CsvPreviewData {
+  headers: string[];
+  rows: Record<string, string>[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CsvProcessorService {
-
   constructor() { }
 
-  async processCsv(file: File): Promise<Record<string, string>[]> {
+  async parseStructured(file: File): Promise<CsvPreviewData> {
     if (!file) {
-      return [];
+      return { headers: [], rows: [] };
     }
 
     const csvData = await file.text();
     if (!csvData) {
-      return [];
+      return { headers: [], rows: [] };
     }
 
     const lines = csvData.trim().split('\n');
-    if (lines.length < 1) {
-      return [];
+    if (lines.length < 1) { // Should have at least a header row
+      return { headers: [], rows: [] };
     }
 
     const headers = lines[0].split(',').map(header => header.trim());
-    const records: Record<string, string>[] = [];
+    const rows: Record<string, string>[] = [];
 
-    for (let i = 1; i < lines.length; i++) {
+    for (let i = 1; i < lines.length; i++) { // Data rows start from the second line
       const values = lines[i].split(',').map(value => value.trim());
+      // Only include rows that have the same number of columns as headers
       if (values.length === headers.length) {
         const record: Record<string, string> = {};
         headers.forEach((header, index) => {
           record[header] = values[index];
         });
-        records.push(record);
+        rows.push(record);
       }
     }
-    return records;
+    return { headers, rows };
   }
 }

@@ -11,7 +11,6 @@ export class ImageProcessorService {
       console.error('File is not an image:', file.type);
       return null;
     }
-
     try {
       const imageBitmap = await createImageBitmap(file);
       return imageBitmap;

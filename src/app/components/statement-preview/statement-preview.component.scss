@@ -1,0 +1,11 @@
+.image-preview-container img {
+  display: block; // Ensures margin works as expected
+  max-width: 100%; // Makes it responsive if container is smaller, though fixed size is set
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.table-responsive {
+  max-height: 500px; // Example max height for scrollable table
+  overflow-y: auto;
+}

@@ -1,6 +1,11 @@
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { Injectable } from '@angular/core';
+import { getDocument, GlobalWorkerOptions, PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist/legacy/build/pdf.mjs";
+
 GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
 
+@Injectable({
+  providedIn: 'root'
+})
 export class PdfProcessor {
   constructor() {
     // It's good practice to set the workerSrc for pdf.js, especially for larger PDFs.
@@ -22,13 +27,13 @@ export class PdfProcessor {
     try {
       // Load the PDF document using pdf.js
       const loadingTask = getDocument({ data: arrayBuffer });
-      const pdfDoc = await loadingTask.promise;
+      const pdfDoc: PDFDocumentProxy = await loadingTask.promise; // Added type for clarity
       const numPages = pdfDoc.numPages;
 
       console.log(`PDF loaded with ${numPages} pages.`);
 
       for (let i = 1; i <= numPages; i++) {
-        const page = await pdfDoc.getPage(i);
+        const page: PDFPageProxy = await pdfDoc.getPage(i); // Added type for clarity
         const viewport = page.getViewport({ scale: 1 }); // Use desired scale
 
         // Create a canvas element

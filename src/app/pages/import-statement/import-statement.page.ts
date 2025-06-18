@@ -4,9 +4,8 @@ import {DOCUMENT} from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CreateExpenseModal} from '../../components/modals/create-expense-modal/create-expense.modal';
 import {ImportStatementStateEnum} from '../../enums/import-statement-state.enum';
-import { StatementImporter } from '../../importers/statement.importer';
+import { StatementImporter, PreviewData } from '../../importers/statement.importer';
 
 @Component({
   selector: 'app-import-statement',
@@ -17,6 +16,10 @@ import { StatementImporter } from '../../importers/statement.importer';
 export class ImportStatementPage extends BasePageComponent implements OnInit {
 
   state: ImportStatementStateEnum = ImportStatementStateEnum.WaitingForStatement;
+  previewData: PreviewData | null = null;
+  currentFile: File | null = null;
+  processingError: string | null = null;
+  isPreviewLoading: boolean = false; // Added isPreviewLoading
 
   constructor(
     @Inject(DOCUMENT) document: Document,
@@ -31,39 +34,89 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
 
   override ngOnInit() {
     super.ngOnInit();
-
-    this.setTitle("Trunk Track")
+    this.setTitle("Import Statement");
   }
 
-  onFileSystemHandlesDropped(fileSystemHandles: FileSystemHandle[]) {
-    fileSystemHandles.forEach(async (fileSystemHandle) => {
-      if (fileSystemHandle.kind === "directory") {
+  async onFileSystemHandlesDropped(fileSystemHandles: FileSystemHandle[]) {
+    this.processingError = null;
+    this.previewData = null;
+    this.currentFile = null;
+    this.state = ImportStatementStateEnum.WaitingForStatement;
+    this.isPreviewLoading = false; // Reset
+
+    if (!fileSystemHandles || fileSystemHandles.length === 0) {
+        this.processingError = "No file provided.";
         return;
+    }
+
+    const fileSystemHandle = fileSystemHandles[0];
+    if (!fileSystemHandle) {
+        this.processingError = "No file handle available.";
+        return;
+    }
+
+    if (fileSystemHandle.kind === "directory") {
+      this.processingError = "Please drop a single file, not a directory.";
+      return;
+    }
+
+    const fileSystemFileHandle = fileSystemHandle as FileSystemFileHandle;
+    const file = await fileSystemFileHandle.getFile();
+    this.currentFile = file;
+
+    this.isPreviewLoading = true; // Indicate loading of preview
+
+    try {
+      this.previewData = await this.statementImporter.extractPreviewData(file);
+      this.isPreviewLoading = false; // Preview loading finished
+
+      if (this.previewData === null && file.type.startsWith('image/')) {
+         this.processingError = "Could not generate preview for this image file. It might be corrupted or an unsupported image format.";
+         this.state = ImportStatementStateEnum.WaitingForStatement;
+      } else if (this.previewData) {
+        if (typeof this.previewData === 'object' && 'headers' in this.previewData && this.previewData.headers.length === 0 && this.previewData.rows.length === 0) {
+            this.processingError = "CSV file appears to be empty or does not contain headers.";
+            this.state = ImportStatementStateEnum.WaitingForStatement;
+        } else {
+            this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
+        }
+      } else {
+        this.processingError = "Could not generate preview for this file type or the file is empty/corrupted.";
+        this.state = ImportStatementStateEnum.WaitingForStatement;
       }
+    } catch (error) {
+      this.isPreviewLoading = false; // Preview loading finished (with error)
+      console.error('Error extracting preview data:', error);
+      this.processingError = "Error generating file preview. Please try another file.";
+      this.state = ImportStatementStateEnum.WaitingForStatement;
+    }
+  }
 
-      const fileSystemFileHandle = fileSystemHandle as FileSystemFileHandle;
-      const file = await fileSystemFileHandle.getFile()
+  async confirmAndProcessStatement() {
+    if (!this.currentFile) {
+      this.processingError = "No file selected for processing.";
+      this.state = this.previewData ? ImportStatementStateEnum.PREVIEWING_STATEMENT : ImportStatementStateEnum.WaitingForStatement; // UPDATED STATE
+      return;
+    }
 
-      console.log("Yesh")
+    this.state = ImportStatementStateEnum.ProcessingStatement;
+    this.processingError = null;
 
-      // TODO: Add checks for file type and error handling
-      this.statementImporter.process(file).then(expenseOptions => {
-        console.log('Imported expense options:', expenseOptions);
-        // TODO: Set state to processing and then to display results
-      }).catch(error => {
-        console.error('Error processing statement:', error);
-        // TODO: Set state to error
-      });
+    try {
+      const expenseOptions = await this.statementImporter.processStatementForLLM(this.currentFile);
+      console.log('Processed expense options:', expenseOptions);
 
-      // if (file.type.startsWith("audio")) {
-      //   this.fileSystemFileHandle = fileSystemHandle as FileSystemFileHandle;
-      //   this.audioSrc = URL.createObjectURL(file);
-      // } else {
-      //   this.error = new Error(`Unsupported file type '${file.type}' for '${file.name}'.`);
-      //   this.outputCollapsed = false;
-      //   this.status = TaskStatus.Error;
-      // }
-    })
+      if (expenseOptions && expenseOptions.length > 0) {
+         this.state = ImportStatementStateEnum.StatementProcessed;
+      } else {
+         this.processingError = "No expenses found in the statement, or an error occurred during processing.";
+         this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
+      }
+    } catch (error) {
+      console.error('Error processing statement with LLM:', error);
+      this.processingError = "A critical error occurred while processing the statement with AI. Please try again.";
+      this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
+    }
   }
 
   protected readonly ImportStatementStateEnum = ImportStatementStateEnum;
