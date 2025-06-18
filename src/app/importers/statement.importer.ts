@@ -36,11 +36,11 @@ export class StatementImporter {
   async extractPreviewData(file: File): Promise<PreviewData> {
     console.log('Extracting preview data for:', file.name, file.type);
     if (file.type === 'text/csv') {
-      return this.csvProcessor.extractPreview(file);
+      return this.csvProcessor.processData(file);
     } else if (file.type === 'application/pdf') {
-      return this.pdfProcessor.extractPreview(file);
+      return this.pdfProcessor.extractImagesAsBase64(file);
     } else if (file.type.startsWith('image/')) {
-      return this.imageProcessor.extractPreview(file);
+      return this.imageProcessor.convertToBase64(file);
     } else {
       console.warn('Unsupported file type for preview:', file.type);
       return null;

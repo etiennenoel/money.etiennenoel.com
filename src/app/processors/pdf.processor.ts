@@ -68,7 +68,7 @@ export class PdfProcessor {
     }
   }
 
-  async extractPreview(pdfFile: File): Promise<string[]> {
+  async extractImagesAsBase64(pdfFile: File): Promise<string[]> {
     console.log('extractPreview (for PDF) called for:', pdfFile.name);
     const base64Images: string[] = [];
     const arrayBuffer = await pdfFile.arrayBuffer();

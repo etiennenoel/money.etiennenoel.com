@@ -21,7 +21,7 @@ export class ImageProcessorService {
     }
   }
 
-  async extractPreview(file: File): Promise<string | null> {
+  async convertToBase64(file: File): Promise<string | null> {
     if (!file.type.startsWith('image/')) {
       console.error('File is not an image:', file.type);
       return null;

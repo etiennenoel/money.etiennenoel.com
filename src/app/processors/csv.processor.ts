@@ -43,7 +43,7 @@ export class CsvProcessorService {
     return records;
   }
 
-  async extractPreview(file: File): Promise<CsvPreviewData> {
+  async processData(file: File): Promise<CsvPreviewData> {
     if (!file) {
       return { headers: [], rows: [] };
     }
