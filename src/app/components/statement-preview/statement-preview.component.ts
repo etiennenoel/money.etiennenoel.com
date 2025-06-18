@@ -83,6 +83,13 @@ export class StatementPreviewComponent implements OnChanges, AfterViewInit {
     this.imageBitmapsToRender = [];
   }
 
+  isImageBitmapArray(data: any): boolean { // Made public by removing 'private'
+    if (Array.isArray(data) && data.length > 0) {
+      return data.every(item => item instanceof ImageBitmap);
+    }
+    return false;
+  }
+
   private drawImages(): void {
     if (!this.previewCanvases || this.previewCanvases.length !== this.imageBitmapsToRender.length) {
       console.warn('Preview canvases not ready or mismatch with image data. Attempting redraw shortly...');

@@ -25,7 +25,7 @@
   </div>
 
   <!-- Updated empty state check for images -->
-  <div *ngIf="!isCsvData && imageBitmapsToRender.length === 0 && previewData && (previewData instanceof ImageBitmap || (Array.isArray(previewData) && previewData.every(item => item instanceof ImageBitmap)))">
+  <div *ngIf="!isCsvData && imageBitmapsToRender.length === 0 && previewData && (previewData instanceof ImageBitmap || isImageBitmapArray(previewData))">
      <p>No images to display for preview, or image data is empty.</p>
   </div>
   <!-- More specific empty state for CSV -->
