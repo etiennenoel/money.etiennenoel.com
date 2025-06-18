@@ -1,6 +1,11 @@
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { Injectable } from '@angular/core';
+import { getDocument, GlobalWorkerOptions, PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist/legacy/build/pdf.mjs";
+
 GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
 
+@Injectable({
+  providedIn: 'root'
+})
 export class PdfProcessor {
   constructor() {
     // It's good practice to set the workerSrc for pdf.js, especially for larger PDFs.
@@ -60,6 +65,50 @@ export class PdfProcessor {
       console.error('Error processing PDF with pdf.js:', error);
       // Depending on requirements, either re-throw or return empty/partial results
       return []; // Return empty array on error
+    }
+  }
+
+  async extractPreview(pdfFile: File): Promise<string[]> {
+    console.log('extractPreview (for PDF) called for:', pdfFile.name);
+    const base64Images: string[] = [];
+    const arrayBuffer = await pdfFile.arrayBuffer();
+
+    try {
+      const loadingTask = getDocument({ data: arrayBuffer });
+      const pdfDoc: PDFDocumentProxy = await loadingTask.promise;
+      const numPages = pdfDoc.numPages;
+
+      console.log(`PDF loaded for preview with ${numPages} pages.`);
+
+      for (let i = 1; i <= numPages; i++) {
+        const page: PDFPageProxy = await pdfDoc.getPage(i);
+        const viewport = page.getViewport({ scale: 1.5 }); // Using a moderate scale
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) {
+          console.error('Could not get canvas context for page ' + i + ' during preview extraction.');
+          continue;
+        }
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+        await page.render(renderContext).promise;
+
+        base64Images.push(canvas.toDataURL('image/png'));
+        console.log(`Extracted preview for page ${i}/${numPages}.`);
+
+        page.cleanup();
+      }
+      return base64Images;
+    } catch (error) {
+      console.error('Error processing PDF for preview extraction:', error);
+      return [];
     }
   }
 }
