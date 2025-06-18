@@ -1,4 +1,5 @@
 <div *ngIf="previewData">
+  <!-- CSV Preview Section (no changes here) -->
   <div *ngIf="isCsvData && csvHeaders.length > 0" class="table-responsive">
     <h5>CSV Preview</h5>
     <table class="table table-striped table-bordered">
@@ -15,20 +16,34 @@
     </table>
   </div>
 
-  <!-- Changed to render ImageBitmaps on canvas -->
+  <!-- Image Preview Section - Modified for single canvas and pagination -->
   <div *ngIf="!isCsvData && imageBitmapsToRender.length > 0">
     <h5>Image Preview</h5>
-    <div *ngFor="let bitmap of imageBitmapsToRender; let i = index" class="image-preview-container">
+
+    <!-- Single Canvas for Image Display -->
+    <div class="image-preview-container">
       <canvas #previewCanvas class="preview-canvas" style="border: 1px solid #ccc; margin-bottom: 10px;"></canvas>
-      <!-- Width and height are set in drawImages method to 768x768 -->
+      <!-- Width and height are set in drawCurrentImageInternal method -->
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="totalPages > 1" class="pagination-controls" style="margin-top: 10px; text-align: center;">
+      <button class="btn btn-secondary btn-sm me-2" (click)="previousPage()" [disabled]="currentPageIndex === 0">
+        <i class="bi bi-arrow-left"></i> Previous
+      </button>
+      <span style="margin: 0 10px;">
+        Page {{ currentPageIndex + 1 }} of {{ totalPages }}
+      </span>
+      <button class="btn btn-secondary btn-sm ms-2" (click)="nextPage()" [disabled]="currentPageIndex >= totalPages - 1">
+        Next <i class="bi bi-arrow-right"></i>
+      </button>
     </div>
   </div>
 
-  <!-- Updated empty state check for images -->
+  <!-- Empty States (no changes here) -->
   <div *ngIf="showEmptyImageState">
      <p>No images to display for preview, or image data is empty.</p>
   </div>
-  <!-- More specific empty state for CSV -->
   <div *ngIf="isCsvData && csvHeaders.length === 0 && csvRows.length === 0 && previewData && !imageBitmapsToRender.length">
      <p>CSV file seems to be empty or has no headers.</p>
   </div>
