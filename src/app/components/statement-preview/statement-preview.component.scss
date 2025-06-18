@@ -1,11 +1,28 @@
+// Styles for the image preview section
+.image-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; // Optional: for vertical centering if the container has a fixed height
+  margin-bottom: 10px; // Retained from previous img styling, good for spacing
+}
+
+.preview-canvas {
+  border: 1px solid #ccc; // Style for the canvas element itself
+  // Canvas width and height are set dynamically in the component's TypeScript.
+}
+
+// Styles for the CSV preview table (if any specific styling is needed beyond bootstrap)
+.table-responsive {
+  max-height: 500px; // Example max height for scrollable table
+  overflow-y: auto;  // Keep existing style
+}
+
+/*
+// Old styles for img, commented out as we now use canvas
 .image-preview-container img {
-  display: block; // Ensures margin works as expected
-  max-width: 100%; // Makes it responsive if container is smaller, though fixed size is set
+  display: block;
+  max-width: 100%;
   border: 1px solid #ccc;
   margin-bottom: 10px;
 }
-
-.table-responsive {
-  max-height: 500px; // Example max height for scrollable table
-  overflow-y: auto;
-}
+*/
