@@ -3,6 +3,7 @@ import {AdvancedFormControl} from '@magieno/angular-advanced-forms';
 import {FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {isPlatformServer} from '@angular/common';
+import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ import {isPlatformServer} from '@angular/common';
 export class PromptProvider {
 
   imageExtractionSystemPromptFormControl = new FormControl<string>(this.getImageExtractionSystemPrompt());
+  imageExtractionJSONSchemaFormControl = new FormControl<string>(this.getImageExtractionJSONSchema());
 
   subscriptions: Subscription[] = [];
 
@@ -28,6 +30,14 @@ export class PromptProvider {
 
       localStorage.setItem("image_extraction_prompt_override", value);
     }))
+    this.subscriptions.push(this.imageExtractionJSONSchemaFormControl.valueChanges.subscribe(value => {
+      if(value === null) {
+        localStorage.removeItem("image_extraction_json_schema_override");
+        return;
+      }
+
+      localStorage.setItem("image_extraction_json_schema_override", value);
+    }))
   }
 
   getImageExtractionSystemPrompt() {
@@ -40,6 +50,19 @@ export class PromptProvider {
       return promptOverride;
     } else {
       return `You are a very advanced OCR tool. Transform any image into JSON by extracting all the expenses you find in the provided bank statements or receipts. Return an array of expenses containing these properties: 'transactionDate, amount, currency, description'. If a property is not applicable, you can omit it or set its value to null. Only identify expenses.`;
+    }
+  }
+
+  getImageExtractionJSONSchema() {
+    if(isPlatformServer(this.platformId)) {
+      return "";
+    }
+
+    const jsonSchema = window.localStorage.getItem("image_extraction_json_schema_override");
+    if(jsonSchema) {
+      return jsonSchema;
+    } else {
+      return JSON.stringify(CreateExpenseOptionsJsonSchema);
     }
   }
 

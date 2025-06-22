@@ -37,9 +37,11 @@ export class ImageProcessor {
     });
     const imageBitmap = await this.extract(file);
 
+    const jsonSchema = JSON.parse(this.promptProvider.getImageExtractionJSONSchema());
+
     const extractedDataString = await session.prompt([
       {role: "user", content: [{type: "image", value: imageBitmap}]}
-    ], {responseConstraint: CreateExpenseOptionsJsonSchema});
+    ], {responseConstraint: jsonSchema});
 
     this.loggingService.debug(`Prompt response:`, extractedDataString);
 
