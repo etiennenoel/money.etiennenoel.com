@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Category } from '../interfaces/category.interface';
+import {LoggingService} from '@magieno/angular-core';
 
 const DB_NAME = 'CategoryDB';
 const STORE_NAME = 'categories';
@@ -11,7 +12,10 @@ const STORE_NAME = 'categories';
 export class CategoryRepository {
   private dbPromise: Promise<IDBDatabase | null>;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly loggingService: LoggingService,
+    ) {
     if (isPlatformBrowser(this.platformId)) {
       this.dbPromise = new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, 1);
@@ -28,7 +32,7 @@ export class CategoryRepository {
         };
 
         request.onerror = (event) => {
-          console.error('IndexedDB error:', (event.target as IDBOpenDBRequest).error);
+          this.loggingService.error('IndexedDB error:', (event.target as IDBOpenDBRequest).error);
           reject((event.target as IDBOpenDBRequest).error);
         };
       });

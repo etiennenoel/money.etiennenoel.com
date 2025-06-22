@@ -44,6 +44,7 @@ import {
   StringNormalizer
 } from '@pristine-ts/data-mapping-common';
 import {MagienoAdvancedTableComponent} from '@magieno/angular-advanced-table';
+import {DebugLogsPage} from './pages/debug-logs/debug-logs.page';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {MagienoAdvancedTableComponent} from '@magieno/angular-advanced-table';
     DatepickerRangeComponent,
 
     // Pages
+    DebugLogsPage,
     IndexPage,
     ExpenseListPage,
     ImportStatementPage,

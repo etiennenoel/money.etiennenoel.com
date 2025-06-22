@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Expense } from '../interfaces/expense.interface';
 import { SearchQuery, SearchResult } from '@magieno/common';
 import {CreateExpenseOptions} from '../options/create-expense.options';
+import {LoggingService} from '@magieno/angular-core';
 
 const DB_NAME = 'ExpenseDB';
 const STORE_NAME = 'expenses';
@@ -13,7 +14,10 @@ const STORE_NAME = 'expenses';
 export class ExpenseRepository {
   private dbPromise: Promise<IDBDatabase | null>;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly loggingService: LoggingService,
+    ) {
     if (isPlatformBrowser(this.platformId)) {
 
       this.dbPromise = new Promise((resolve, reject) => {
@@ -31,7 +35,7 @@ export class ExpenseRepository {
         };
 
         request.onerror = (event) => {
-          console.error('IndexedDB error:', (event.target as IDBOpenDBRequest).error);
+          this.loggingService.error('IndexedDB error:', (event.target as IDBOpenDBRequest).error);
           reject((event.target as IDBOpenDBRequest).error);
         };
       });
@@ -247,7 +251,7 @@ export class ExpenseRepository {
       request.onerror = (event) => {
         // Consider how to map IDBRequest error to a SearchResult or reject appropriately
         // For now, let's return an empty result on error, similar to other handlers.
-        console.error('IndexedDB getAll error:', (event.target as IDBRequest).error);
+        this.loggingService.error('IndexedDB getAll error:', (event.target as IDBRequest).error);
         resolve({ // Or reject? For now, resolve with empty to match other paths.
           results: [],
           totalNumberOfResults: 0,

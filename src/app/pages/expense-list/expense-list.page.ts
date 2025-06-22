@@ -1,5 +1,4 @@
-import {Component, Inject, Injector, OnInit, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {Expense} from '../../interfaces/expense.interface';
 import {ExpenseRepository} from '../../repositories/expense.repository';
 import {MagienoAdvancedTableColumnInterface, TableStateEnum} from '@magieno/angular-advanced-table';
@@ -50,6 +49,8 @@ export class ExpenseListPage implements OnInit {
   }
 
   async refresh() {
+    this.tableState = TableStateEnum.Refreshing;
     this.searchResult = await this.expenseRepository.search(this.searchQuery)
+    this.tableState = TableStateEnum.Loaded;
   }
 }

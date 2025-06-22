@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import {PreviewData} from '../../types/preview-data.type';
 import {CsvPreviewData} from '../../interfaces/csv-preview-data.interface';
+import {LoggingService} from '@magieno/angular-core';
 
 @Component({
   selector: 'app-statement-preview',
@@ -27,7 +28,9 @@ export class StatementPreviewComponent implements OnChanges, AfterViewInit {
            (this.previewData instanceof ImageBitmap || this.isImageBitmapArray(this.previewData));
   }
 
-  constructor() {}
+  constructor(
+    private readonly loggingService: LoggingService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['previewData']) { // Process if previewData input changes
@@ -99,14 +102,14 @@ export class StatementPreviewComponent implements OnChanges, AfterViewInit {
 
   private drawImages(): void {
     if (!this.previewCanvases || this.previewCanvases.length !== this.imageBitmapsToRender.length) {
-      console.warn('Preview canvases not ready or mismatch with image data. Attempting redraw shortly...');
+      this.loggingService.warning('Preview canvases not ready or mismatch with image data. Attempting redraw shortly...');
       // This uses a timeout to wait for the QueryList to update after *ngFor has rendered the canvases.
       setTimeout(() => {
         if (this.viewInitialized && !this.isCsvData && this.imageBitmapsToRender.length > 0 &&
             this.previewCanvases.length === this.imageBitmapsToRender.length) {
             this.drawImagesInternal();
         } else if (this.previewCanvases.length !== this.imageBitmapsToRender.length) {
-            console.error('Canvas and image data mismatch even after delay. Cannot draw images.');
+          this.loggingService.error('Canvas and image data mismatch even after delay. Cannot draw images.');
         }
       }, 50); // A small delay, adjust if needed
       return;
@@ -127,7 +130,7 @@ export class StatementPreviewComponent implements OnChanges, AfterViewInit {
         if (ctx) {
           ctx.drawImage(bitmap, 0, 0, 768, 768);
         } else {
-          console.error('Failed to get 2D context for canvas at index ' + index);
+          this.loggingService.error('Failed to get 2D context for canvas at index ' + index);
         }
       }
     });

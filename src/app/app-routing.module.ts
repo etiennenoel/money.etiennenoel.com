@@ -5,6 +5,8 @@ import { ExpenseListPage } from './pages/expense-list/expense-list.page'; // Imp
 import {RootComponent} from './components/root/root.component';
 import {LayoutComponent} from './components/layout/layout.component';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
+import {RouteEnum} from './enums/route.enum';
+import {DebugLogsPage} from './pages/debug-logs/debug-logs.page';
 
 const routes: Routes = [
   {
@@ -20,12 +22,16 @@ const routes: Routes = [
             component: IndexPage,
           },
           {
-            path: 'expenses',
+            path: RouteEnum.Expenses,
             component: ExpenseListPage
           },
           {
-            path: 'import-statement',
+            path: RouteEnum.ImportStatement,
             component: ImportStatementPage
+          },
+          {
+            path: RouteEnum.DebugLogs,
+            component: DebugLogsPage
           },
         ]
       }

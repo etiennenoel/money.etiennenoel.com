@@ -3,6 +3,7 @@ import { getDocument, GlobalWorkerOptions, PDFDocumentProxy, PDFPageProxy } from
 import {DataMapper} from '@pristine-ts/data-mapping-common';
 import {CreateExpenseOptions} from '../options/create-expense.options';
 import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
+import {LoggingService} from '@magieno/angular-core';
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
 
@@ -12,11 +13,12 @@ GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
 export class PdfProcessor {
   constructor(
     private readonly dataMapper: DataMapper,
+    private readonly loggingService: LoggingService,
   ) {
   }
 
   async extract(pdfFile: File): Promise<ImageBitmap[]> {
-    console.log('convertToImages (with pdf.js) called for:', pdfFile.name);
+    this.loggingService.debug('convertToImages (with pdf.js) called for:', pdfFile.name);
     const images: ImageBitmap[] = [];
 
     const arrayBuffer = await pdfFile.arrayBuffer();
@@ -27,7 +29,7 @@ export class PdfProcessor {
       const pdfDoc: PDFDocumentProxy = await loadingTask.promise; // Added type for clarity
       const numPages = pdfDoc.numPages;
 
-      console.log(`PDF loaded with ${numPages} pages.`);
+      this.loggingService.debug(`PDF loaded with ${numPages} pages.`);
 
       for (let i = 1; i <= numPages; i++) {
         const page: PDFPageProxy = await pdfDoc.getPage(i); // Added type for clarity
@@ -52,14 +54,14 @@ export class PdfProcessor {
 
         // Add the image data URL to the array
         images.push(await createImageBitmap(canvas)); // Or 'image/jpeg'
-        console.log(`Rendered page ${i}/${numPages} to image.`);
+        this.loggingService.debug(`Rendered page ${i}/${numPages} to image.`);
 
         // Clean up page resources
         page.cleanup();
       }
       return images;
     } catch (error) {
-      console.error('Error processing PDF with pdf.js:', error);
+      this.loggingService.error('Error processing PDF with pdf.js:', error);
       // Depending on requirements, either re-throw or return empty/partial results
       return []; // Return empty array on error
     }
@@ -91,7 +93,7 @@ export class PdfProcessor {
         })
       }], {responseConstraint: CreateExpenseOptionsJsonSchema});
 
-    console.log(`Prompt response:`, extractedDataString);
+    this.loggingService.debug(`Prompt response:`, extractedDataString);
 
     return this.dataMapper.autoMap(JSON.parse(extractedDataString), CreateExpenseOptions);
   }

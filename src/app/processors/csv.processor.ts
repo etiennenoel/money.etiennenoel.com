@@ -3,12 +3,14 @@ import {CsvPreviewData} from '../interfaces/csv-preview-data.interface';
 import {CreateExpenseOptions} from '../options/create-expense.options';
 import {DataMapper} from '@pristine-ts/data-mapping-common';
 import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
+import {LoggingService} from '@magieno/angular-core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CsvProcessor {
   constructor(
+    private readonly loggingService: LoggingService
   ) { }
 
   async extract(file: File): Promise<CsvPreviewData> {
@@ -91,7 +93,7 @@ export class CsvProcessor {
       responseConstraint: this.getJsonSchema(headersForPrompt),
     });
 
-    console.log(`Prompt response:`, mappingConfig);
+    this.loggingService.debug(`Prompt response:`, mappingConfig);
 
     let parsedMapping: Record<string, string> = JSON.parse(mappingConfig);
 

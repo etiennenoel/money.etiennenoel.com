@@ -8,6 +8,7 @@ import {CreateExpenseOptions} from "../../../options/create-expense.options";
 import {Expense} from '../../../interfaces/expense.interface';
 import {ExpenseRepository} from '../../../repositories/expense.repository';
 import {ExpenseManager} from '../../../managers/expense.manager';
+import {ToastStore} from '../../../stores/toast.store';
 
 @Component({
   selector: 'app-create-expense-modal',
@@ -28,6 +29,7 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private readonly formFactory: FormFactory,
     private readonly expenseManager: ExpenseManager,
+    private readonly toastStore: ToastStore
   ) {
     super(document);
 
@@ -40,5 +42,11 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
 
   async createExpense() {
     await this.expenseManager.create(this.form.value);
+
+    this.activeModal.close(true);
+    this.toastStore.publish({
+      message:"Expense created succesfully",
+      position: "bottom",
+    })
   }
 }

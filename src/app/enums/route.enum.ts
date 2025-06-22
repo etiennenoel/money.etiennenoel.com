@@ -1,4 +1,6 @@
 export enum RouteEnum {
   Home = "/",
-  Expenses = "/expenses",
+  Expenses = "expenses",
+  ImportStatement = "import-statement",
+  DebugLogs = "debug/logs",
 }

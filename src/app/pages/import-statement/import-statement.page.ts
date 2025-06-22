@@ -8,6 +8,7 @@ import {ImportStatementStateEnum} from '../../enums/import-statement-state.enum'
 import { StatementImporter } from '../../importers/statement.importer';
 import { CreateExpenseOptions } from '../../options/create-expense.options';
 import {PreviewData} from '../../types/preview-data.type';
+import {LoggingService} from '@magieno/angular-core';
 
 @Component({
   selector: 'app-import-statement',
@@ -29,7 +30,8 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     protected readonly router: Router,
     protected readonly ngbModal: NgbModal,
     title: Title,
-    private readonly statementImporter: StatementImporter
+    private readonly statementImporter: StatementImporter,
+    private readonly loggingService: LoggingService,
   ) {
     super(document, title);
   }
@@ -85,7 +87,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
         this.state = ImportStatementStateEnum.WaitingForStatement;
       }
     } catch (error) {
-      console.error('Error extracting preview data:', error);
+      this.loggingService.error('Error extracting preview data:', error);
       this.processingError = "Error generating file preview. Please try another file.";
       this.state = ImportStatementStateEnum.WaitingForStatement;
     }
@@ -103,7 +105,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
 
     try {
       this.expenseOptions = await this.statementImporter.process(this.currentFile);
-      console.log('Processed expense options:', this.expenseOptions);
+      this.loggingService.debug('Processed expense options:', this.expenseOptions);
 
       if (this.expenseOptions && this.expenseOptions.length > 0) {
          this.state = ImportStatementStateEnum.ReviewExpensesFound;
@@ -112,7 +114,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
          this.state = ImportStatementStateEnum.PreviewingStatement;
       }
     } catch (error) {
-      console.error('Error processing statement with LLM:', error);
+      this.loggingService.error('Error processing statement with LLM:', error);
       this.processingError = "A critical error occurred while processing the statement with AI. Please try again.";
       this.state = ImportStatementStateEnum.PreviewingStatement;
     }
