@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { getDocument, GlobalWorkerOptions, PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist/legacy/build/pdf.mjs";
+import {DataMapper} from '@pristine-ts/data-mapping-common';
+import {CreateExpenseOptions} from '../options/create-expense.options';
+import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
 
@@ -7,18 +10,12 @@ GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'; // Or your local path
   providedIn: 'root'
 })
 export class PdfProcessor {
-  constructor() {
-    // It's good practice to set the workerSrc for pdf.js, especially for larger PDFs.
-    // This would typically be a path to the pdf.worker.js file hosted with your application
-    // or from a CDN. For this example, we'll comment it out but it's important for real usage.
-    // If you are managing dependencies yourself, ensure 'pdf.worker.js' is accessible.
-    // Example:
-    // if (typeof window !== 'undefined' && 'pdfjsLib' in window) {
-    //   (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${(window as any).pdfjsLib.version}/pdf.worker.min.js`;
-    // }
+  constructor(
+    private readonly dataMapper: DataMapper,
+  ) {
   }
 
-  async convertToImages(pdfFile: File): Promise<ImageBitmap[]> {
+  async extract(pdfFile: File): Promise<ImageBitmap[]> {
     console.log('convertToImages (with pdf.js) called for:', pdfFile.name);
     const images: ImageBitmap[] = [];
 
@@ -66,5 +63,34 @@ export class PdfProcessor {
       // Depending on requirements, either re-throw or return empty/partial results
       return []; // Return empty array on error
     }
+  }
+
+  async extractCreateExpenseOptions(file: File): Promise<CreateExpenseOptions[]> {
+    const images = await this.extract(file);
+
+    // @ts-expect-error
+    const session = await LanguageModel.create({
+      expectedInputs: [{type: "text"}, {type: "image"}],
+      initialPrompts: [
+        {
+          role: "system",
+          content: `You are a very advanced OCR tool. Transform any image into JSON by extracting all the expenses you find in the provided bank statements or receipts. Return an array of expenses containing these properties: 'transactionDate, amount, currency, description'. If a property is not applicable, you can omit it or set its value to null. Only identify expenses.`,
+        }
+      ]
+    });
+
+    const extractedDataString = await session.prompt([
+      {
+        role: "user",
+        content:
+          images.map(image => {
+            return {
+              type: "image",
+              value: image
+            }
+        })
+      }], {responseConstraint: CreateExpenseOptionsJsonSchema});
+
+    return this.dataMapper.autoMap(JSON.parse(extractedDataString), CreateExpenseOptions);
   }
 }

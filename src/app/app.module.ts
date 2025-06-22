@@ -30,14 +30,21 @@ import {CategoriesProvider} from './providers/categories.provider';
 import {LabelsProvider} from './providers/labels.provider';
 import {MagienoDragAndDropComponent} from '@magieno/angular-drag-and-drop';
 import {ImportStatementPage} from './pages/import-statement/import-statement.page';
-import { CsvProcessorService } from './processors/csv.processor';
+import { CsvProcessor } from './processors/csv.processor';
 
 // Import the PdfProcessor service
 import { PdfProcessor } from './processors/pdf.processor';
 // Import the ImageProcessorService
-import { ImageProcessorService } from './processors/image.processor';
+import { ImageProcessor } from './processors/image.processor';
 import { ExpenseImportTable } from './components/expense-import-table/expense-import-table';
 import { StatementPreviewComponent } from './components/statement-preview/statement-preview.component';
+import {
+  AutoDataMappingBuilder,
+  DataMapper,
+  DateNormalizer,
+  NumberNormalizer,
+  StringNormalizer
+} from '@pristine-ts/data-mapping-common';
 
 @NgModule({
   declarations: [
@@ -104,8 +111,12 @@ import { StatementPreviewComponent } from './components/statement-preview/statem
     ToastStore,
 
     // Services
-    CsvProcessorService,
-    ImageProcessorService, // Add ImageProcessorService here
+    CsvProcessor,
+    ImageProcessor, // Add ImageProcessorService here
+    {
+      provide: DataMapper,
+      useValue: new DataMapper(new AutoDataMappingBuilder(), [new StringNormalizer(), new DateNormalizer(), new NumberNormalizer()], []),
+    },
   ],
   bootstrap: [RootComponent]
 })

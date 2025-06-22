@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { PreviewData } from '../../importers/statement.importer'; // This now includes ImageBitmap types
-import { CsvPreviewData } from '../../processors/csv.processor';
+import {PreviewData} from '../../types/preview-data.type';
+import {CsvPreviewData} from '../../interfaces/csv-preview-data.interface';
 
 @Component({
   selector: 'app-statement-preview',

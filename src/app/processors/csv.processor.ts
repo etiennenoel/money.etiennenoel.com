@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-
-export interface CsvPreviewData {
-  headers: string[];
-  rows: Record<string, string>[];
-}
+import {CsvPreviewData} from '../interfaces/csv-preview-data.interface';
+import {CreateExpenseOptions} from '../options/create-expense.options';
+import {DataMapper} from '@pristine-ts/data-mapping-common';
+import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CsvProcessorService {
-  constructor() { }
+export class CsvProcessor {
+  constructor(
+  ) { }
 
-  async parseStructured(file: File): Promise<CsvPreviewData> {
+  async extract(file: File): Promise<CsvPreviewData> {
     if (!file) {
       return { headers: [], rows: [] };
     }
@@ -41,5 +41,66 @@ export class CsvProcessorService {
       }
     }
     return { headers, rows };
+  }
+
+  private getJsonSchema(headers: string[]) {
+    const jsonSchema: any = {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Expenses",
+      "description": "An array of expenses",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Expense",
+        "description": "A single expense record",
+        "required": headers,
+        "properties": {
+        }
+      }
+    }
+
+    // Map the headers into properties object
+    headers.forEach(header => {
+      jsonSchema.items.properties[header] = {
+        "type": "string"
+      }
+    })
+
+    return jsonSchema;
+  }
+
+  async extractCreateExpenseOptions(file: File): Promise<CreateExpenseOptions[]> {
+    const csvResult = await this.extract(file); // Use the new method
+    if (!csvResult || csvResult.rows.length === 0) return [];
+
+    const headersForPrompt = csvResult.headers; // Use headers directly
+    const recordsToMap = csvResult.rows;      // Use rows for mapping
+
+    // @ts-expect-error
+    const session = await LanguageModel.create({
+      expectedInputs: [{type: "text"}],
+      initialPrompts: [
+        {
+          role: "system",
+          content: `You are a very advanced CSV mapping tool. You will received CSV headers and will map them to the following properties: 'transactionDate, amount, currency, description'. Provide the mapping as a JSON object where keys are CSV headers and values are property names.`,
+        }
+      ]
+    });
+
+    const mappingConfig = await session.prompt(`Given the CSV headers: ${headersForPrompt.join(', ')}, map them.`, {
+      responseConstraint: this.getJsonSchema(headersForPrompt),
+    });
+
+    let parsedMapping: Record<string, string> = JSON.parse(mappingConfig);
+
+    return recordsToMap.map(record => { // Map over csvResult.rows
+      const expenseOptions = new CreateExpenseOptions();
+      for (const header in parsedMapping) {
+        if (record.hasOwnProperty(header) && expenseOptions.hasOwnProperty(parsedMapping[header])) {
+          (expenseOptions as any)[parsedMapping[header]] = record[header];
+        }
+      }
+      return expenseOptions;
+    });
   }
 }

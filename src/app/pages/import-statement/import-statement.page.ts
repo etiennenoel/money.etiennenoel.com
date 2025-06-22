@@ -5,8 +5,9 @@ import {Title} from '@angular/platform-browser';
 import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImportStatementStateEnum} from '../../enums/import-statement-state.enum';
-import { StatementImporter, PreviewData } from '../../importers/statement.importer';
+import { StatementImporter } from '../../importers/statement.importer';
 import { CreateExpenseOptions } from '../../options/create-expense.options';
+import {PreviewData} from '../../types/preview-data.type';
 
 @Component({
   selector: 'app-import-statement',
@@ -64,7 +65,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     const file = await fileSystemFileHandle.getFile();
     this.currentFile = file;
 
-    this.state = ImportStatementStateEnum.ProcessingStatement; // Set state to ProcessingStatement
+    this.state = ImportStatementStateEnum.ProcessingStatement;
 
     try {
       this.previewData = await this.statementImporter.extractPreviewData(file);
@@ -77,7 +78,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
             this.processingError = "CSV file appears to be empty or does not contain headers.";
             this.state = ImportStatementStateEnum.WaitingForStatement;
         } else {
-            this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT;
+            this.state = ImportStatementStateEnum.PreviewingStatement;
         }
       } else {
         this.processingError = "Could not generate preview for this file type or the file is empty/corrupted.";
@@ -93,7 +94,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   async confirmAndProcessStatement() {
     if (!this.currentFile) {
       this.processingError = "No file selected for processing.";
-      this.state = this.previewData ? ImportStatementStateEnum.PREVIEWING_STATEMENT : ImportStatementStateEnum.WaitingForStatement;
+      this.state = this.previewData ? ImportStatementStateEnum.PreviewingStatement : ImportStatementStateEnum.WaitingForStatement;
       return;
     }
 
@@ -101,19 +102,19 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     this.processingError = null;
 
     try {
-      this.expenseOptions = await this.statementImporter.processStatementForLLM(this.currentFile);
+      this.expenseOptions = await this.statementImporter.process(this.currentFile);
       console.log('Processed expense options:', this.expenseOptions);
 
       if (this.expenseOptions && this.expenseOptions.length > 0) {
          this.state = ImportStatementStateEnum.ReviewExpensesFound;
       } else {
          this.processingError = "No expenses found in the statement, or an error occurred during processing.";
-         this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
+         this.state = ImportStatementStateEnum.PreviewingStatement;
       }
     } catch (error) {
       console.error('Error processing statement with LLM:', error);
       this.processingError = "A critical error occurred while processing the statement with AI. Please try again.";
-      this.state = ImportStatementStateEnum.PREVIEWING_STATEMENT; // UPDATED STATE
+      this.state = ImportStatementStateEnum.PreviewingStatement;
     }
   }
 

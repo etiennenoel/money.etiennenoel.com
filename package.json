@@ -30,6 +30,8 @@
     "@ngx-translate/http-loader": "^16.0.1",
     "@popperjs/core": "^2.11.8",
     "@pristine-ts/mysql-common": "^0.0.368",
+    "@pristine-ts/data-mapping-common": "^0.0.368",
+    "@pristine-ts/class-validator": "^2.0.3",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
     "chartjs-plugin-annotation": "^3.0.1",
