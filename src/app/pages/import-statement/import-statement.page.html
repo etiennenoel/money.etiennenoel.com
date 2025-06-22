@@ -89,7 +89,19 @@
   }
 </div>
 
-<magieno-collapsible-card class="mt-5">
+
+<magieno-collapsible-card class="mt-5" [(collapsed)]="debugCollapsed" (collapsedChange)="debugCollapsedChange()">
   <div headerContent>Debug</div>
-  <div>Test</div>
+  <div class="mt-3">
+    <h6>Pdf (.pdf) or Image (.png, .jpg, etc..) prompt override</h6>
+
+    <div class="form-group">
+      <label>System prompt</label>
+      <textarea class="form-control" rows="5" [formControl]="promptProvider.imageExtractionSystemPromptFormControl"></textarea>
+    </div>
+    <hr>
+    <h6 class="mt-2">CSV (.csv) prompt override</h6>
+
+
+  </div>
 </magieno-collapsible-card>

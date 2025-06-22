@@ -3,6 +3,7 @@ import {CreateExpenseOptions} from '../options/create-expense.options';
 import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
 import {DataMapper} from '@pristine-ts/data-mapping-common';
 import {LoggingService} from '@magieno/angular-core';
+import {PromptProvider} from '../providers/prompt.provider';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class ImageProcessor {
   constructor(
     private readonly dataMapper: DataMapper,
     private readonly loggingService: LoggingService,
+    private readonly promptProvider: PromptProvider,
   ) {
   }
 
@@ -29,7 +31,7 @@ export class ImageProcessor {
       initialPrompts: [
         {
           role: "system",
-          content: `You are a very advanced OCR tool. Transform any image into JSON by extracting all the expenses you find in the provided bank statements or receipts. Return an array of expenses containing these properties: 'transactionDate, amount, currency, description'. If a property is not applicable, you can omit it or set its value to null. Only identify expenses.`,
+          content: this.promptProvider.getImageExtractionSystemPrompt(),
         }
       ]
     });

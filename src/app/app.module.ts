@@ -45,6 +45,7 @@ import {
 import {MagienoAdvancedTableComponent} from '@magieno/angular-advanced-table';
 import {DebugLogsPage} from './pages/debug-logs/debug-logs.page';
 import {LabelRepository} from './repositories/label.repository';
+import {PromptProvider} from './providers/prompt.provider';
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import {LabelRepository} from './repositories/label.repository';
     CategoriesProvider,
     LabelsProvider,
     PdfProcessor, // Add PdfProcessor here
+    PromptProvider,
 
     // Stores,
     ToastStore,

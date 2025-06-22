@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DOCUMENT} from '@angular/common';
 import {Title} from '@angular/platform-browser';
@@ -9,6 +9,7 @@ import { StatementImporter } from '../../importers/statement.importer';
 import { CreateExpenseOptions } from '../../options/create-expense.options';
 import {PreviewData} from '../../types/preview-data.type';
 import {LoggingService} from '@magieno/angular-core';
+import {PromptProvider} from '../../providers/prompt.provider';
 
 @Component({
   selector: 'app-import-statement',
@@ -24,6 +25,8 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   processingError: string | null = null;
   expenseOptions: CreateExpenseOptions[] = [];
 
+  debugCollapsed: boolean = true;
+
   constructor(
     @Inject(DOCUMENT) document: Document,
     protected readonly route: ActivatedRoute,
@@ -32,6 +35,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     title: Title,
     private readonly statementImporter: StatementImporter,
     private readonly loggingService: LoggingService,
+    protected readonly promptProvider: PromptProvider,
   ) {
     super(document, title);
   }
@@ -39,6 +43,12 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
   override ngOnInit() {
     super.ngOnInit();
     this.setTitle("Import Statement");
+
+    this.debugCollapsed = localStorage.getItem("import_statement_debug_collapsed") === "true";
+  }
+
+  debugCollapsedChange() {
+    localStorage.setItem("import_statement_debug_collapsed", this.debugCollapsed ? "true" : "false")
   }
 
   async onFileSystemHandlesDropped(fileSystemHandles: FileSystemHandle[]) {
