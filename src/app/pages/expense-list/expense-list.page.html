@@ -1,71 +1,22 @@
 <h2>Expenses</h2>
 
-<div class="filter-section">
-  <input
-    type="text"
-    [(ngModel)]="searchTerm"
-    (input)="applyFilters()"
-    placeholder="Search expenses (id, location, description, currency, category, label)..."
-    class="search-input"
-  />
-</div>
-
-<table class="expenses-table" *ngIf="expenses && expenses.length > 0">
-  <thead>
-    <tr>
-      <th (click)="sortByColumn('id')">
-        ID
-        <span *ngIf="currentSortColumn === 'id'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('createdAt')">
-        Created At
-        <span *ngIf="currentSortColumn === 'createdAt'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('transactionDate')">
-        Transaction Date
-        <span *ngIf="currentSortColumn === 'transactionDate'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('amount')">
-        Amount
-        <span *ngIf="currentSortColumn === 'amount'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('currency')">
-        Currency
-        <span *ngIf="currentSortColumn === 'currency'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('location')">
-        Location
-        <span *ngIf="currentSortColumn === 'location'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('description')">
-        Description
-        <span *ngIf="currentSortColumn === 'description'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('categories')">
-        Categories
-        <span *ngIf="currentSortColumn === 'categories'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-      <th (click)="sortByColumn('labels')">
-        Labels
-        <span *ngIf="currentSortColumn === 'labels'">{{ isSortAscending ? '▲' : '▼' }}</span>
-      </th>
-    </tr>
-  </thead>
+<magieno-advanced-table
+  [columns]="columns"
+  [(searchQuery)]="searchQuery"
+  [state]="tableState"
+  (searchQueryChange)="this.refresh()"
+>
   <tbody>
-    <tr *ngFor="let expense of expenses">
-      <td>{{ expense.id }}</td>
-      <td>{{ expense.createdAt | date:'shortDate' }}</td>
-      <td>{{ expense.transactionDate | date:'shortDate' }}</td>
-      <td>{{ expense.amount | currency:expense.currency:'symbol' }}</td>
-      <td>{{ expense.currency }}</td>
-      <td>{{ expense.location }}</td>
-      <td>{{ expense.description }}</td>
-      <td>{{ expense.categories ? expense.categories.join(', ') : '' }}</td>
-      <td>{{ expense.labels ? expense.labels.join(', ') : '' }}</td>
-    </tr>
-  </tbody>
-</table>
+    @for (expense of searchResult.results; track expense.id) {
+      <tr>
+        <td>{{ expense.transactionDate | date:'shortDate' }}</td>
+        <td>{{ expense.description }}</td>
+        <td>{{ expense.amount }}</td>
+        <td></td>
+        <!--    <td>{{ expense.categories ? expense.categories.join(', ') : '' }}</td>-->
+        <!--    <td>{{ expense.labels ? expense.labels.join(', ') : '' }}</td>-->
+      </tr>
+    }
 
-<p *ngIf="!expenses || expenses.length === 0">
-  No expenses found.
-</p>
+  </tbody>
+</magieno-advanced-table>

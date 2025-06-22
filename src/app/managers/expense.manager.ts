@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ExpenseRepository } from '../repositories/expense.repository';
 import { Expense } from '../interfaces/expense.interface';
+import {CreateExpenseOptions} from '../options/create-expense.options';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Expense } from '../interfaces/expense.interface';
 export class ExpenseManager {
   constructor(private expenseRepository: ExpenseRepository) {}
 
-  async create(expenseData: Omit<Expense, 'id' | 'createdAt'>): Promise<Expense> {
+  async create(expenseData: CreateExpenseOptions): Promise<Expense> {
     return this.expenseRepository.create(expenseData);
   }
 

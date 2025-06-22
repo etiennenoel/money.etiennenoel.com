@@ -18,14 +18,14 @@ export class CreateExpenseOptions {
   amount: number = 0;
 
   @advancedFormControl({
-    type: FormControlTypeEnum.Input,
+    type: FormControlTypeEnum.DatePicker,
     fieldType: FieldType.Date,
     displayableElements: {
       labelTitle: 'Transaction Date',
     },
   })
   @IsNotEmpty()
-  transactionDate!: FormDate;
+  transactionDate!: Date;
 
   @advancedFormControl({
     type: FormControlTypeEnum.Input,

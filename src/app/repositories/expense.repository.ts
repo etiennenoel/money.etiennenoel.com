@@ -1,7 +1,8 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Expense } from '../interfaces/expense.interface';
-import { SearchQuery, SearchResult } from '@pristine-ts/mysql-common';
+import { SearchQuery, SearchResult } from '@magieno/common';
+import {CreateExpenseOptions} from '../options/create-expense.options';
 
 const DB_NAME = 'ExpenseDB';
 const STORE_NAME = 'expenses';
@@ -41,7 +42,7 @@ export class ExpenseRepository {
     }
   }
 
-  async create(expenseData: Omit<Expense, 'id' | 'createdAt'>): Promise<Expense> {
+  async create(expenseData: CreateExpenseOptions): Promise<Expense> {
     if (!isPlatformBrowser(this.platformId)) {
       return Promise.reject(new Error('IndexedDB is not available in this environment.'));
     }
@@ -52,6 +53,7 @@ export class ExpenseRepository {
 
     const expense: Expense = {
       ...expenseData,
+      transactionDate: expenseData.transactionDate,
       id: crypto.randomUUID(),
       createdAt: new Date(),
     };

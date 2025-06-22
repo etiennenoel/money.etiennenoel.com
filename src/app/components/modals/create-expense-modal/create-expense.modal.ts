@@ -5,6 +5,9 @@ import {BaseComponent} from '../../base/base.component';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdvancedForm, FormFactory} from "@magieno/angular-advanced-forms";
 import {CreateExpenseOptions} from "../../../options/create-expense.options";
+import {Expense} from '../../../interfaces/expense.interface';
+import {ExpenseRepository} from '../../../repositories/expense.repository';
+import {ExpenseManager} from '../../../managers/expense.manager';
 
 @Component({
   selector: 'app-create-expense-modal',
@@ -24,6 +27,7 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
     @Inject(DOCUMENT) document: Document,
     public activeModal: NgbActiveModal,
     private readonly formFactory: FormFactory,
+    private readonly expenseManager: ExpenseManager,
   ) {
     super(document);
 
@@ -33,7 +37,8 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
   override ngOnInit() {
     super.ngOnInit();
   }
-  createExpense() {
 
+  async createExpense() {
+    await this.expenseManager.create(this.form.value);
   }
 }

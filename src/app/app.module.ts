@@ -14,8 +14,6 @@ import {ToastStore} from './stores/toast.store';
 import { ExpenseListPage } from './pages/expense-list/expense-list.page';
 import {ExpenseRepository} from './repositories/expense.repository';
 import { CategoryRepository } from './repositories/category.repository';
-import { CreateExpenseComponent } from './components/create-expense/create-expense.component';
-import { CreateExpensePage } from './pages/create-expense/create-expense.page';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {TopbarComponent} from './components/topbar/topbar.component';
 import {StatsCardComponent} from './components/stats-card/stats-card.component';
@@ -45,6 +43,7 @@ import {
   NumberNormalizer,
   StringNormalizer
 } from '@pristine-ts/data-mapping-common';
+import {MagienoAdvancedTableComponent} from '@magieno/angular-advanced-table';
 
 @NgModule({
   declarations: [
@@ -60,11 +59,9 @@ import {
     // Pages
     IndexPage,
     ExpenseListPage,
-    CreateExpensePage,
     ImportStatementPage,
 
     // Components
-    CreateExpenseComponent,
     StatsCardComponent,
 
     // Modals
@@ -83,6 +80,7 @@ import {
     MagienoCoreModule,
     MagienoAdvancedFormsModule,
     MagienoDragAndDropComponent,
+    MagienoAdvancedTableComponent,
 
     TranslateModule,
   ],

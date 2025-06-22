@@ -3,7 +3,7 @@ export interface Expense {
   createdAt: Date;
   transactionDate: Date;
   amount: number;
-  currency: string;
+  // currency: string;
   location: string;
   description: string;
   categories: string[];
