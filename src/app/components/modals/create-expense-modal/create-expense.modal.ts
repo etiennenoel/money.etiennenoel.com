@@ -5,10 +5,8 @@ import {BaseComponent} from '../../base/base.component';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdvancedForm, FormFactory, FormLifecycleStatusEnum} from "@magieno/angular-advanced-forms";
 import {CreateExpenseOptions} from "../../../options/create-expense.options";
-import {Expense} from '../../../interfaces/expense.interface';
-import {ExpenseRepository} from '../../../repositories/expense.repository';
-import {ExpenseManager} from '../../../managers/expense.manager';
 import {ToastStore} from '../../../stores/toast.store';
+import {ExpenseRepository} from '../../../repositories/expense.repository';
 
 @Component({
   selector: 'app-create-expense-modal',
@@ -28,7 +26,7 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
     @Inject(DOCUMENT) document: Document,
     public activeModal: NgbActiveModal,
     private readonly formFactory: FormFactory,
-    private readonly expenseManager: ExpenseManager,
+    private readonly expenseRepository: ExpenseRepository,
     private readonly toastStore: ToastStore
   ) {
     super(document);
@@ -49,7 +47,7 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
       return;
     }
 
-    await this.expenseManager.create(this.form.value);
+    await this.expenseRepository.create(this.form.value);
 
     this.activeModal.close(true);
     this.toastStore.publish({

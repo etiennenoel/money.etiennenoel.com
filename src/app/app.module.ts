@@ -19,7 +19,6 @@ import {TopbarComponent} from './components/topbar/topbar.component';
 import {StatsCardComponent} from './components/stats-card/stats-card.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
-import { ExpenseManager } from './managers/expense.manager';
 import {CreateExpenseModal} from './components/modals/create-expense-modal/create-expense.modal';
 import {MagienoCoreModule} from '@magieno/angular-core';
 import {MagienoAdvancedFormsModule} from '@magieno/angular-advanced-forms';
@@ -45,6 +44,7 @@ import {
 } from '@pristine-ts/data-mapping-common';
 import {MagienoAdvancedTableComponent} from '@magieno/angular-advanced-table';
 import {DebugLogsPage} from './pages/debug-logs/debug-logs.page';
+import {LabelRepository} from './repositories/label.repository';
 
 @NgModule({
   declarations: [
@@ -98,9 +98,7 @@ import {DebugLogsPage} from './pages/debug-logs/debug-logs.page';
     // Repositories
     ExpenseRepository,
     CategoryRepository,
-
-    // Managers
-    ExpenseManager,
+    LabelRepository,
 
     // Providers
     CategoriesProvider,

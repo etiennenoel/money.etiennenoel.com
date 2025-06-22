@@ -3,6 +3,7 @@ import {Expense} from '../../interfaces/expense.interface';
 import {ExpenseRepository} from '../../repositories/expense.repository';
 import {MagienoAdvancedTableColumnInterface, TableStateEnum} from '@magieno/angular-advanced-table';
 import {SearchQuery, SearchResult} from '@magieno/common';
+import {isPlatformServer} from '@angular/common';
 
 @Component({
   selector: 'app-expense-list',
@@ -45,6 +46,10 @@ export class ExpenseListPage implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    if(isPlatformServer(this.platformId)) {
+      return;
+    }
+
     this.refresh();
   }
 

@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
-import {ItemInterface, ItemsProviderInterface} from '@magieno/common';
+import {ItemInterface, ItemsProviderInterface, SearchQuery} from '@magieno/common';
+import {CategoryRepository} from '../repositories/category.repository';
+import {LabelRepository} from '../repositories/label.repository';
 
 let items = [{
   id: "id_test",
@@ -10,27 +12,32 @@ let a = 1;
 
 @Injectable()
 export class LabelsProvider implements ItemsProviderInterface {
+  constructor(private readonly labelRepository: LabelRepository) {
+  }
+
   async getItems(query?: string): Promise<ItemInterface[]> {
-    return items.filter(items => items.label.includes(query ?? ""));
+    const result = await this.labelRepository.search(new SearchQuery({
+      query,
+    }));
+
+    return result.results.map(element => {
+      return {
+        id: element.id,
+        label: element.name
+      }
+    })
   }
 
   async createFrom(query?: string): Promise<ItemInterface> {
-    console.log("Create From");
-    a++;
+    if(!query) {
+      throw new Error("Cannot create label from empty query.");
+    }
 
-   return new Promise(resolve => {
-     let item = {
-       id: a + "",
-       label: query + "_",
-     }
+    const label = await this.labelRepository.create({name: query});
 
-     items.push(item)
-
-     setTimeout(() => {
-       resolve(item);
-     }, 1000)
-   })
-
-
+    return {
+      id: label.id,
+      label: label.name
+    }
   }
 }
