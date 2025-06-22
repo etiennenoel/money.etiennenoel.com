@@ -60,8 +60,8 @@ export class PdfProcessor {
         page.cleanup();
       }
       return images;
-    } catch (error) {
-      this.loggingService.error('Error processing PDF with pdf.js:', error);
+    } catch (error: any) {
+      this.loggingService.error('Error processing PDF with pdf.js:', {message: error.message, error});
       // Depending on requirements, either re-throw or return empty/partial results
       return []; // Return empty array on error
     }

@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Category } from '../interfaces/category.interface';
 import {LoggingService} from '@magieno/angular-core';
 
-const DB_NAME = 'CategoryDB';
+const DB_NAME = 'trunk_track';
 const STORE_NAME = 'categories';
 
 @Injectable({

@@ -5,7 +5,7 @@ import { SearchQuery, SearchResult } from '@magieno/common';
 import {CreateExpenseOptions} from '../options/create-expense.options';
 import {LoggingService} from '@magieno/angular-core';
 
-const DB_NAME = 'ExpenseDB';
+const DB_NAME = 'trunk_track';
 const STORE_NAME = 'expenses';
 
 @Injectable({

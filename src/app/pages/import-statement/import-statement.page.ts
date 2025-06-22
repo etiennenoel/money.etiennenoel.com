@@ -86,8 +86,8 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
         this.processingError = "Could not generate preview for this file type or the file is empty/corrupted.";
         this.state = ImportStatementStateEnum.WaitingForStatement;
       }
-    } catch (error) {
-      this.loggingService.error('Error extracting preview data:', error);
+    } catch (error: any) {
+      this.loggingService.error('Error extracting preview data:', {message: error.message, error});
       this.processingError = "Error generating file preview. Please try another file.";
       this.state = ImportStatementStateEnum.WaitingForStatement;
     }
@@ -113,8 +113,8 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
          this.processingError = "No expenses found in the statement, or an error occurred during processing.";
          this.state = ImportStatementStateEnum.PreviewingStatement;
       }
-    } catch (error) {
-      this.loggingService.error('Error processing statement with LLM:', error);
+    } catch (error: any) {
+      this.loggingService.error('Error processing statement with LLM:', {message: error.message, error});
       this.processingError = "A critical error occurred while processing the statement with AI. Please try again.";
       this.state = ImportStatementStateEnum.PreviewingStatement;
     }

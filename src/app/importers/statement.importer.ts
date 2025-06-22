@@ -37,21 +37,26 @@ export class StatementImporter {
   }
 
   async process(file: File): Promise<CreateExpenseOptions[]> {
-    this.loggingService.debug('Processing file with LLM in StatementImporter:', {file});
+    try {
+      this.loggingService.debug('Processing file with LLM in StatementImporter:', {file});
 
-    switch (file.type) {
-      case 'text/csv':
-        return this.csvProcessor.extractCreateExpenseOptions(file);
-      case 'application/pdf':
-        return this.pdfProcessor.extractCreateExpenseOptions(file);
-      case 'image/jpeg':
-      case 'image/png':
-      case 'image/gif':
-        return this.imageProcessor.extractCreateExpenseOptions(file);
-      default:
-        const message = `Unsupported file type for LLM processing: ${file.type}`;
-        this.loggingService.warning(message);
-        throw new Error(message);
+      switch (file.type) {
+        case 'text/csv':
+          return this.csvProcessor.extractCreateExpenseOptions(file);
+        case 'application/pdf':
+          return this.pdfProcessor.extractCreateExpenseOptions(file);
+        case 'image/jpeg':
+        case 'image/png':
+        case 'image/gif':
+          return this.imageProcessor.extractCreateExpenseOptions(file);
+        default:
+          const message = `Unsupported file type for LLM processing: ${file.type}`;
+          this.loggingService.warning(message);
+          throw new Error(message);
+      }
+    } catch (e) {
+      this.loggingService.error('Error processing the file.', {error: e})
+      throw e;
     }
   }
 }

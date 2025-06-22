@@ -3,7 +3,7 @@ import {RouterOutlet} from "@angular/router";
 import {DOCUMENT} from '@angular/common';
 import {BaseComponent} from '../../base/base.component';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {AdvancedForm, FormFactory} from "@magieno/angular-advanced-forms";
+import {AdvancedForm, FormFactory, FormLifecycleStatusEnum} from "@magieno/angular-advanced-forms";
 import {CreateExpenseOptions} from "../../../options/create-expense.options";
 import {Expense} from '../../../interfaces/expense.interface';
 import {ExpenseRepository} from '../../../repositories/expense.repository';
@@ -41,6 +41,14 @@ export class CreateExpenseModal extends BaseComponent implements OnInit {
   }
 
   async createExpense() {
+    // Validate the form first.
+    const validationErrors = await this.form.validate();
+    if (validationErrors && validationErrors.length > 0) {
+      this.form.setButtonLifecycleStatus(FormLifecycleStatusEnum.ReadyForInput);
+      this.form.lifecycleStatus = FormLifecycleStatusEnum.ReadyForInput;
+      return;
+    }
+
     await this.expenseManager.create(this.form.value);
 
     this.activeModal.close(true);
