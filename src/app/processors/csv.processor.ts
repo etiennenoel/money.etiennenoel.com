@@ -91,6 +91,8 @@ export class CsvProcessor {
       responseConstraint: this.getJsonSchema(headersForPrompt),
     });
 
+    console.log(`Prompt response:`, mappingConfig);
+
     let parsedMapping: Record<string, string> = JSON.parse(mappingConfig);
 
     return recordsToMap.map(record => { // Map over csvResult.rows

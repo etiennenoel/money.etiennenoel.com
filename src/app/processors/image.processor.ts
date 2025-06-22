@@ -37,6 +37,8 @@ export class ImageProcessor {
       {role: "user", content: [{type: "image", value: imageBitmap}]}
     ], {responseConstraint: CreateExpenseOptionsJsonSchema});
 
+    console.log(`Prompt response:`, extractedDataString);
+
     return this.dataMapper.autoMap(JSON.parse(extractedDataString), CreateExpenseOptions);
   }
 }

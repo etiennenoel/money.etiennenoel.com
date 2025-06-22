@@ -91,6 +91,8 @@ export class PdfProcessor {
         })
       }], {responseConstraint: CreateExpenseOptionsJsonSchema});
 
+    console.log(`Prompt response:`, extractedDataString);
+
     return this.dataMapper.autoMap(JSON.parse(extractedDataString), CreateExpenseOptions);
   }
 }
