@@ -8,7 +8,7 @@ import {CreateExpenseModal} from '../../components/modals/create-expense-modal/c
 import {DashboardPeriodView} from "../../interfaces/dashboard-period.view";
 import {ExpenseRepository} from "../../repositories/expense.repository";
 import {DateRangeInterface} from "../../interfaces/date-range.interface";
-import {SearchQuery} from "@magieno/common";
+import {SearchQuery, SearchFieldFilter, FilteringOperatorEnum} from "@magieno/common";
 
 @Component({
   selector: 'app-index',
@@ -44,7 +44,13 @@ export class IndexPage extends BasePageComponent implements OnInit {
   rangeSelected(event: DateRangeInterface) {
     // TODO: Implement range selection logic
     console.log("Range selected:", event);
-    const searchQuery = new SearchQuery({dateRange: event});
-    console.log("SearchQuery created:", searchQuery);
+    const searchQuery = new SearchQuery();
+    if (event.startDate) {
+      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, event.startDate));
+    }
+    if (event.endDate) {
+      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.endDate));
+    }
+    console.log("SearchQuery created with filters:", searchQuery);
   }
 }
