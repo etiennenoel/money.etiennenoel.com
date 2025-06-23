@@ -10,7 +10,7 @@ export const CreateExpenseOptionsJsonSchema = {
     "required": [
       "transactionDate",
       "amount",
-      "currency",
+      //"currency",
       //"location",
       "description",
       //"categories",
@@ -23,7 +23,7 @@ export const CreateExpenseOptionsJsonSchema = {
         "format": "date-time"
       },
       "amount": {"type": "number", "description": "The monetary value of the expense"},
-      "currency": {"type": "string", "description": "The currency of the amount"},
+      //"currency": {"type": "string", "description": "The currency of the amount"},
       //"location": { "type": "string", "description": "The location where the expense occurred" },
       "description": {"type": "string", "description": "A brief description of the expense"},
       //"categories": { "type": "array", "description": "A list of categories for the expense", "items": { "type": "string" } },
