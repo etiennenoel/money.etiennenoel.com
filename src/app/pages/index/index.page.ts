@@ -7,6 +7,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CreateExpenseModal} from '../../components/modals/create-expense-modal/create-expense.modal';
 import {DashboardPeriodView} from "../../interfaces/dashboard-period.view";
 import {ExpenseRepository} from "../../repositories/expense.repository";
+import {DateRangeInterface} from "../../interfaces/date-range.interface";
 
 @Component({
   selector: 'app-index',
@@ -37,5 +38,10 @@ export class IndexPage extends BasePageComponent implements OnInit {
 
   openNewExpenseModal() {
     this.ngbModal.open(CreateExpenseModal)
+  }
+
+  rangeSelected(event: DateRangeInterface) {
+    // TODO: Implement range selection logic
+    console.log("Range selected:", event);
   }
 }
