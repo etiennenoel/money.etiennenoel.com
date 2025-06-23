@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {BaseComponent} from '../base/base.component';
-import {DatepickerRangeSelectedEvent} from "./datepicker-range-selected-event.interface";
+import {DateRangeInterface} from "../../interfaces/date-range.interface";
 import {ToastStore} from '../../stores/toast.store';
 import {DOCUMENT} from '@angular/common';
 import {ToastMessageInterface} from '../../interfaces/toast-message.interface';
@@ -16,7 +16,7 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbInputDatepicker} from '
 })
 export class DatepickerRangeComponent extends BaseComponent implements OnInit {
   @ViewChild('datepicker', { static: false }) datepicker!: NgbInputDatepicker;
-  @Output() rangeSelected = new EventEmitter<DatepickerRangeSelectedEvent>();
+  @Output() rangeSelected = new EventEmitter<DateRangeInterface>();
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
