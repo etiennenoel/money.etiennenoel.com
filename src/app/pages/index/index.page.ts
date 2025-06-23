@@ -5,6 +5,8 @@ import {Title} from '@angular/platform-browser';
 import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CreateExpenseModal} from '../../components/modals/create-expense-modal/create-expense.modal';
+import {DashboardPeriodView} from "../../interfaces/dashboard-period.view";
+import {ExpenseRepository} from "../../repositories/expense.repository";
 
 @Component({
   selector: 'app-index',
@@ -13,12 +15,15 @@ import {CreateExpenseModal} from '../../components/modals/create-expense-modal/c
   styleUrl: './index.page.scss'
 })
 export class IndexPage extends BasePageComponent implements OnInit {
+  public currentPeriodDashboardView!: DashboardPeriodView;
+  public previousPeriodDashboardView!: DashboardPeriodView;
 
   constructor(
     @Inject(DOCUMENT) document: Document,
     protected readonly route: ActivatedRoute,
     protected readonly router: Router,
     protected readonly ngbModal: NgbModal,
+    private readonly expenseRepository: ExpenseRepository,
     title: Title,
   ) {
     super(document, title);
