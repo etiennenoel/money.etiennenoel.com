@@ -41,7 +41,7 @@ export class IndexPage extends BasePageComponent implements OnInit {
     this.ngbModal.open(CreateExpenseModal)
   }
 
-  rangeSelected(event: DateRangeInterface) {
+  async rangeSelected(event: DateRangeInterface) {
     // TODO: Implement range selection logic
     console.log("Range selected:", event);
     const searchQuery = new SearchQuery();
@@ -52,5 +52,11 @@ export class IndexPage extends BasePageComponent implements OnInit {
       searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.endDate));
     }
     console.log("SearchQuery created with filters:", searchQuery);
+    try {
+      const results = await this.expenseRepository.search(searchQuery);
+      console.log("Expense search results:", results);
+    } catch (error) {
+      console.error("Error during expense search:", error);
+    }
   }
 }
