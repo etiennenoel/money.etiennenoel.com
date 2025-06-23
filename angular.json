@@ -41,6 +41,18 @@
               {
                 "glob": "pdf.worker.mjs",
                 "input": "node_modules/pdfjs-dist/build/"
+              },
+              {
+                "input": "node_modules/ace-builds/src/",
+                "glob": "mode-javascript.js"
+              },
+              {
+                "input": "node_modules/ace-builds/src/",
+                "glob": "theme-github.js"
+              },
+              {
+                "input": "node_modules/ace-builds/src/",
+                "glob": "theme-xcode.js"
               }
             ],
             "styles": [
@@ -49,7 +61,7 @@
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" ,
               "src/js/theme.min.js",
-
+              "node_modules/ace-builds/src/ace.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
