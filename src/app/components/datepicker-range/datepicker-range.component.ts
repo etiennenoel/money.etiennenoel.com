@@ -1,6 +1,7 @@
-import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {BaseComponent} from '../base/base.component';
+import {DateRangeInterface} from "../../interfaces/date-range.interface";
 import {ToastStore} from '../../stores/toast.store';
 import {DOCUMENT} from '@angular/common';
 import {ToastMessageInterface} from '../../interfaces/toast-message.interface';
@@ -15,6 +16,7 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbInputDatepicker} from '
 })
 export class DatepickerRangeComponent extends BaseComponent implements OnInit {
   @ViewChild('datepicker', { static: false }) datepicker!: NgbInputDatepicker;
+  @Output() rangeSelected = new EventEmitter<DateRangeInterface>();
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
@@ -28,6 +30,7 @@ export class DatepickerRangeComponent extends BaseComponent implements OnInit {
 
     this.fromDate = this.calendar.getToday();
     this.toDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
+    this.emitRangeSelectedEvent();
   }
 
   onDateSelection(date: NgbDate) {
@@ -38,6 +41,15 @@ export class DatepickerRangeComponent extends BaseComponent implements OnInit {
     } else {
       this.toDate = null;
       this.fromDate = date;
+    }
+    this.emitRangeSelectedEvent();
+  }
+
+  private emitRangeSelectedEvent(): void {
+    if (this.fromDate && this.toDate) {
+      const fromDate = new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day);
+      const toDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day);
+      this.rangeSelected.emit({ fromDate, toDate });
     }
   }
 
@@ -124,12 +136,7 @@ export class DatepickerRangeComponent extends BaseComponent implements OnInit {
     this.fromDate = fromDate;
     this.toDate = toDate;
     this.hoveredDate = null;
-    // Optionally, emit an event or call a method to notify parent components
-    // For now, let's assume onDateSelection can handle updating internal state if needed,
-    // or a dedicated method to finalize selection could be called.
-    // To update the formattedRange, we might need to call something similar to onDateSelection
-    // or ensure the getter for formattedRange is re-evaluated.
-    // Let's assume for now that setting fromDate and toDate is enough and Angular's change detection handles the rest.
+    this.emitRangeSelectedEvent();
   }
 
   openCustomDatepicker(): void {
