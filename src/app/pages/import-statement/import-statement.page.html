@@ -99,12 +99,16 @@
       <label>System prompt</label>
       <textarea class="form-control" rows="5" [formControl]="promptProvider.imageExtractionSystemPromptFormControl"></textarea>
     </div>
+    <div class="form-group">
+      <label>User prompt</label>
+      <textarea class="form-control" rows="5" [formControl]="promptProvider.imageExtractionUserPromptFormControl"></textarea>
+    </div>
     <div class="form-group mt-3">
       <label>JSON Schema</label>
       <magieno-code-editor [control]="promptProvider.imageExtractionJSONSchemaFormControl"></magieno-code-editor>
     </div>
-    <hr>
-    <h6 class="mt-2">CSV (.csv) prompt override</h6>
+<!--    <hr>-->
+<!--    <h6 class="mt-2">CSV (.csv) prompt override</h6>-->
 
 
   </div>

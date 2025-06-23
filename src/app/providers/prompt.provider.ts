@@ -4,12 +4,14 @@ import {FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {isPlatformServer} from '@angular/common';
 import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
+import {LoggingService} from '@magieno/angular-core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PromptProvider {
 
+  imageExtractionUserPromptFormControl = new FormControl<string>(this.getImageExtractionUserPrompt());
   imageExtractionSystemPromptFormControl = new FormControl<string>(this.getImageExtractionSystemPrompt());
   imageExtractionJSONSchemaFormControl = new FormControl<string>(this.getImageExtractionJSONSchema());
 
@@ -24,12 +26,22 @@ export class PromptProvider {
 
     this.subscriptions.push(this.imageExtractionSystemPromptFormControl.valueChanges.subscribe(value => {
       if(value === null) {
-        localStorage.removeItem("image_extraction_prompt_override");
+        localStorage.removeItem("image_extraction_system_prompt_override");
         return;
       }
 
-      localStorage.setItem("image_extraction_prompt_override", value);
+      localStorage.setItem("image_extraction_system_prompt_override", value);
     }))
+
+    this.subscriptions.push(this.imageExtractionUserPromptFormControl.valueChanges.subscribe(value => {
+      if(value === null) {
+        localStorage.removeItem("image_extraction_user_prompt_override");
+        return;
+      }
+
+      localStorage.setItem("image_extraction_user_prompt_override", value);
+    }))
+
     this.subscriptions.push(this.imageExtractionJSONSchemaFormControl.valueChanges.subscribe(value => {
       if(value === null) {
         localStorage.removeItem("image_extraction_json_schema_override");
@@ -53,6 +65,19 @@ export class PromptProvider {
     }
   }
 
+  getImageExtractionUserPrompt() {
+    if(isPlatformServer(this.platformId)) {
+      return "";
+    }
+
+    const promptOverride = window.localStorage.getItem("image_extraction_user_prompt_override");
+    if(promptOverride) {
+      return promptOverride;
+    } else {
+      return `Extract the expenses from this image.`;
+    }
+  }
+
   getImageExtractionJSONSchema() {
     if(isPlatformServer(this.platformId)) {
       return "";
@@ -62,10 +87,7 @@ export class PromptProvider {
     if(jsonSchema) {
       return jsonSchema;
     } else {
-      return JSON.stringify(CreateExpenseOptionsJsonSchema);
+      return JSON.stringify(CreateExpenseOptionsJsonSchema, undefined, 2);
     }
   }
-
-
-
 }
