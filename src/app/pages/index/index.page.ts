@@ -45,11 +45,11 @@ export class IndexPage extends BasePageComponent implements OnInit {
     // TODO: Implement range selection logic
     console.log("Range selected:", event);
     const searchQuery = new SearchQuery();
-    if (event.startDate) {
-      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, event.startDate));
+    if (event.fromDate) {
+      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, event.fromDate));
     }
-    if (event.endDate) {
-      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.endDate));
+    if (event.toDate) {
+      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.toDate));
     }
     console.log("SearchQuery created with filters:", searchQuery);
     try {
