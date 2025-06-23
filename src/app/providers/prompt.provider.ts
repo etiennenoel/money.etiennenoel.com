@@ -61,7 +61,7 @@ export class PromptProvider {
     if(promptOverride) {
       return promptOverride;
     } else {
-      return `You are a very advanced OCR tool. Transform any image into JSON by extracting all the expenses you find in the provided bank statements or receipts. Return an array of expenses containing these properties: 'transactionDate, amount, currency, description'. If a property is not applicable, you can omit it or set its value to null. Only identify expenses.`;
+      return `You are a very advanced OCR tool. Transform any image into JSON by extracting all the expenses you find in the provided bank statements or receipts. Return an array of expenses containing these properties: 'transactionDate, amount, description'. If a property is not applicable, you can omit it or set its value to null. Only identify expenses.`;
     }
   }
 
