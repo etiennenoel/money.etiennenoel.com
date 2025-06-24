@@ -1,4 +1,4 @@
-import { DateRangeInterface } from '../../interfaces/date-range.interface';
+import {DateRangeInterface} from '../interfaces/date-range.interface';
 
 export class DateRangeUtils {
   public static getPreviousRange(dateRange: DateRangeInterface): DateRangeInterface {

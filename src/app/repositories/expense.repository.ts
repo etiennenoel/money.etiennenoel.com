@@ -4,6 +4,7 @@ import { Expense } from '../interfaces/expense.interface';
 import { SearchQuery, SearchResult } from '@magieno/common';
 import {CreateExpenseOptions} from '../options/create-expense.options';
 import {IndexedDbClient, LoggingService} from '@magieno/angular-core';
+import {EventStore} from '../stores/event.store';
 
 const DB_NAME = 'trunk_track_expenses';
 const STORE_NAME = 'expenses';
@@ -13,7 +14,8 @@ const STORE_NAME = 'expenses';
 })
 export class ExpenseRepository {
   constructor(
-    private readonly indexedDbClient: IndexedDbClient<Expense>
+    private readonly indexedDbClient: IndexedDbClient<Expense>,
+    private readonly eventStore: EventStore,
     ) {
   }
 
@@ -25,7 +27,10 @@ export class ExpenseRepository {
       createdAt: new Date(),
     };
 
-    return this.indexedDbClient.create(DB_NAME, STORE_NAME, expense);
+    const createdExpense = await this.indexedDbClient.create(DB_NAME, STORE_NAME, expense);
+
+    this.eventStore.expenseCreatedOrModified.next();
+    return createdExpense;
   }
 
   async get(id: string): Promise<Expense | undefined> {
@@ -37,11 +42,14 @@ export class ExpenseRepository {
   }
 
   async update(expense: Expense): Promise<Expense> {
-    return this.indexedDbClient.update(DB_NAME, STORE_NAME, expense);
+    const updatedExpense = await this.indexedDbClient.update(DB_NAME, STORE_NAME, expense);
+    this.eventStore.expenseCreatedOrModified.next();
+    return updatedExpense;
   }
 
   async delete(id: string): Promise<void> {
-    return this.indexedDbClient.delete(DB_NAME, STORE_NAME, id);
+    await this.indexedDbClient.delete(DB_NAME, STORE_NAME, id);
+    this.eventStore.expenseCreatedOrModified.next();
   }
 
   async search(searchQuery: SearchQuery): Promise<SearchResult<Expense>> {

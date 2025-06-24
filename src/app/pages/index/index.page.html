@@ -34,24 +34,29 @@
 
 <div class="row">
   <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+    @let currentPeriodTotalMoneySpent = this.currentPeriodDashboardView?.totalMoneySpent ?? 0;
+    @let previousPeriodTotalMoneySpent = this.previousPeriodDashboardView?.totalMoneySpent ?? 0;
     <app-stats-card
       [title]="'Money spent'"
-      currentPeriodValue="$2,913"
-      previousPeriodValue="$1,913"
-      percentageDifference="52.3%"
-      trendDirection="up"
-      trendSentiment="negative"
+      [currentPeriodValue]="currentPeriodTotalMoneySpent | currency:'USD':true"
+      [previousPeriodValue]="previousPeriodTotalMoneySpent | currency:'USD':true"
+      [percentageDifference]="this.getPercentageDifference(currentPeriodTotalMoneySpent, previousPeriodTotalMoneySpent) + '%'"
+      [trendDirection]="this.getTrendDirection(currentPeriodTotalMoneySpent, previousPeriodTotalMoneySpent)"
+      [trendSentiment]="this.getTrendSentiment(currentPeriodTotalMoneySpent, previousPeriodTotalMoneySpent, false)"
     ></app-stats-card>
 
   </div>
   <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+    @let currentPeriodNumberOfTransactions = this.currentPeriodDashboardView?.numberOfTransactions ?? 0;
+    @let previousPeriodNumberOfTransactions = this.previousPeriodDashboardView?.numberOfTransactions ?? 0;
+
     <app-stats-card
       [title]="'Number of transactions'"
-      currentPeriodValue="24"
-      previousPeriodValue="34"
-      percentageDifference="12.5%"
-      trendDirection="down"
-      trendSentiment="positive"
+      [currentPeriodValue]="currentPeriodNumberOfTransactions + ''"
+      [previousPeriodValue]="previousPeriodNumberOfTransactions + ''"
+      [percentageDifference]="this.getPercentageDifference(currentPeriodNumberOfTransactions, previousPeriodNumberOfTransactions) + '%'"
+      [trendDirection]="this.getTrendDirection(currentPeriodNumberOfTransactions, previousPeriodNumberOfTransactions)"
+      [trendSentiment]="this.getTrendSentiment(currentPeriodNumberOfTransactions, previousPeriodNumberOfTransactions, false)"
     ></app-stats-card>
 
 
@@ -59,137 +64,139 @@
 
 
   <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+    @let currentPeriodAverageTransactionValue = this.currentPeriodDashboardView?.averageAmountPerTransaction ?? 0;
+    @let previousPeriodAverageTransactionValue = this.previousPeriodDashboardView?.averageAmountPerTransaction ?? 0;
     <app-stats-card
       [title]="'Avg. transaction value'"
-      currentPeriodValue="$121.3"
-      previousPeriodValue="$100.5"
-      percentageDifference="20.7%"
-      trendDirection="up"
-      trendSentiment="negative"
+      [currentPeriodValue]="currentPeriodAverageTransactionValue | currency:'USD':true"
+      [previousPeriodValue]="previousPeriodAverageTransactionValue | currency:'USD':true"
+      [percentageDifference]="this.getPercentageDifference(currentPeriodAverageTransactionValue, previousPeriodAverageTransactionValue) + '%'"
+      [trendDirection]="this.getTrendDirection(currentPeriodAverageTransactionValue, previousPeriodAverageTransactionValue)"
+      [trendSentiment]="this.getTrendSentiment(currentPeriodAverageTransactionValue, previousPeriodAverageTransactionValue, false)"
     ></app-stats-card>
   </div>
 </div>
 
 
-<div class="card h-100">
-  <!-- Header -->
-  <div class="card-header card-header-content-sm-between">
-    <h4 class="card-header-title mb-2 mb-sm-0">Monthly expenses</h4>
+<!--<div class="card h-100">-->
+<!--  &lt;!&ndash; Header &ndash;&gt;-->
+<!--  <div class="card-header card-header-content-sm-between">-->
+<!--    <h4 class="card-header-title mb-2 mb-sm-0">Monthly expenses</h4>-->
 
-    <!-- Nav -->
-    <ul class="nav nav-segment nav-fill" id="expensesTab" role="tablist">
-      <li class="nav-item" data-bs-toggle="chart-bar" data-datasets="thisWeek" data-trigger="click" data-action="toggle" role="presentation">
-        <a class="nav-link active" href="javascript:;" data-bs-toggle="tab" aria-selected="true" role="tab">This week</a>
-      </li>
-      <li class="nav-item" data-bs-toggle="chart-bar" data-datasets="lastWeek" data-trigger="click" data-action="toggle" role="presentation">
-        <a class="nav-link" href="javascript:;" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">Last week</a>
-      </li>
-    </ul>
-    <!-- End Nav -->
-  </div>
-  <!-- End Header -->
+<!--    &lt;!&ndash; Nav &ndash;&gt;-->
+<!--    <ul class="nav nav-segment nav-fill" id="expensesTab" role="tablist">-->
+<!--      <li class="nav-item" data-bs-toggle="chart-bar" data-datasets="thisWeek" data-trigger="click" data-action="toggle" role="presentation">-->
+<!--        <a class="nav-link active" href="javascript:;" data-bs-toggle="tab" aria-selected="true" role="tab">This week</a>-->
+<!--      </li>-->
+<!--      <li class="nav-item" data-bs-toggle="chart-bar" data-datasets="lastWeek" data-trigger="click" data-action="toggle" role="presentation">-->
+<!--        <a class="nav-link" href="javascript:;" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">Last week</a>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--    &lt;!&ndash; End Nav &ndash;&gt;-->
+<!--  </div>-->
+<!--  &lt;!&ndash; End Header &ndash;&gt;-->
 
-  <!-- Body -->
-  <div class="card-body">
-    <div class="row mb-4">
-      <div class="col-sm mb-2 mb-sm-0">
-        <div class="d-flex align-items-center">
-          <span class="h1 mb-0">35%</span>
-          <span class="text-success ms-2">
-                      <i class="bi-graph-up"></i> 25.3%
-                    </span>
-        </div>
-      </div>
-      <!-- End Col -->
+<!--  &lt;!&ndash; Body &ndash;&gt;-->
+<!--  <div class="card-body">-->
+<!--    <div class="row mb-4">-->
+<!--      <div class="col-sm mb-2 mb-sm-0">-->
+<!--        <div class="d-flex align-items-center">-->
+<!--          <span class="h1 mb-0">35%</span>-->
+<!--          <span class="text-success ms-2">-->
+<!--                      <i class="bi-graph-up"></i> 25.3%-->
+<!--                    </span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; End Col &ndash;&gt;-->
 
-      <div class="col-sm-auto align-self-sm-end">
-        <div class="row fs-6 text-body">
-          <div class="col-auto">
-            <span class="legend-indicator bg-primary"></span> New
-          </div>
-          <!-- End Col -->
+<!--      <div class="col-sm-auto align-self-sm-end">-->
+<!--        <div class="row fs-6 text-body">-->
+<!--          <div class="col-auto">-->
+<!--            <span class="legend-indicator bg-primary"></span> New-->
+<!--          </div>-->
+<!--          &lt;!&ndash; End Col &ndash;&gt;-->
 
-          <div class="col-auto">
-            <span class="legend-indicator"></span> Overdue
-          </div>
-          <!-- End Col -->
-        </div>
-        <!-- End Row -->
-      </div>
-      <!-- End Col -->
-    </div>
-    <!-- End Row -->
+<!--          <div class="col-auto">-->
+<!--            <span class="legend-indicator"></span> Overdue-->
+<!--          </div>-->
+<!--          &lt;!&ndash; End Col &ndash;&gt;-->
+<!--        </div>-->
+<!--        &lt;!&ndash; End Row &ndash;&gt;-->
+<!--      </div>-->
+<!--      &lt;!&ndash; End Col &ndash;&gt;-->
+<!--    </div>-->
+<!--    &lt;!&ndash; End Row &ndash;&gt;-->
 
-    <!-- Bar Chart -->
-    <div class="chartjs-custom">
-      <canvas id="updatingBarChart" style="height: 320px; display: block; box-sizing: border-box; width: 713.5px;" data-hs-chartjs-options="{
-                          &quot;type&quot;: &quot;bar&quot;,
-                          &quot;data&quot;: {
-                            &quot;labels&quot;: [&quot;May 1&quot;, &quot;May 2&quot;, &quot;May 3&quot;, &quot;May 4&quot;, &quot;May 5&quot;, &quot;May 6&quot;, &quot;May 7&quot;, &quot;May 8&quot;, &quot;May 9&quot;, &quot;May 10&quot;],
-                            &quot;datasets&quot;: [{
-                              &quot;data&quot;: [200, 300, 290, 350, 150, 350, 300, 100, 125, 220],
-                              &quot;backgroundColor&quot;: &quot;#377dff&quot;,
-                              &quot;hoverBackgroundColor&quot;: &quot;#377dff&quot;,
-                              &quot;borderColor&quot;: &quot;#377dff&quot;,
-                              &quot;maxBarThickness&quot;: &quot;10&quot;
-                            },
-                            {
-                              &quot;data&quot;: [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120],
-                              &quot;backgroundColor&quot;: &quot;#e7eaf3&quot;,
-                              &quot;borderColor&quot;: &quot;#e7eaf3&quot;,
-                              &quot;maxBarThickness&quot;: &quot;10&quot;
-                            }]
-                          },
-                          &quot;options&quot;: {
-                            &quot;scales&quot;: {
-                              &quot;y&quot;: {
-                                &quot;grid&quot;: {
-                                  &quot;color&quot;: &quot;#e7eaf3&quot;,
-                                  &quot;drawBorder&quot;: false,
-                                  &quot;zeroLineColor&quot;: &quot;#e7eaf3&quot;
-                                },
-                                &quot;ticks&quot;: {
-                                  &quot;beginAtZero&quot;: true,
-                                  &quot;stepSize&quot;: 100,
-                                  &quot;fontSize&quot;: 12,
-                                  &quot;fontColor&quot;:  &quot;#97a4af&quot;,
-                                  &quot;fontFamily&quot;: &quot;Open Sans, sans-serif&quot;,
-                                  &quot;padding&quot;: 10,
-                                  &quot;postfix&quot;: &quot;$&quot;
-                                }
-                              },
-                              &quot;x&quot;: {
-                                &quot;grid&quot;: {
-                                  &quot;display&quot;: false,
-                                  &quot;drawBorder&quot;: false
-                                },
-                                &quot;ticks&quot;: {
-                                  &quot;fontSize&quot;: 12,
-                                  &quot;fontColor&quot;:  &quot;#97a4af&quot;,
-                                  &quot;fontFamily&quot;: &quot;Open Sans, sans-serif&quot;,
-                                  &quot;padding&quot;: 5
-                                },
-                                &quot;categoryPercentage&quot;: 0.5,
-                                &quot;maxBarThickness&quot;: &quot;10&quot;
-                              }
-                            },
-                            &quot;cornerRadius&quot;: 2,
-                            &quot;plugins&quot;: {
-                              &quot;tooltip&quot;: {
-                                &quot;prefix&quot;: &quot;$&quot;,
-                                &quot;hasIndicator&quot;: true,
-                                &quot;mode&quot;: &quot;index&quot;,
-                                &quot;intersect&quot;: false
-                              }
-                            },
-                            &quot;hover&quot;: {
-                              &quot;mode&quot;: &quot;nearest&quot;,
-                              &quot;intersect&quot;: true
-                            }
-                          }
-                        }" width="1427" height="640"></canvas>
-    </div>
-    <!-- End Bar Chart -->
-  </div>
-  <!-- End Body -->
-</div>
+<!--    &lt;!&ndash; Bar Chart &ndash;&gt;-->
+<!--    <div class="chartjs-custom">-->
+<!--      <canvas id="updatingBarChart" style="height: 320px; display: block; box-sizing: border-box; width: 713.5px;" data-hs-chartjs-options="{-->
+<!--                          &quot;type&quot;: &quot;bar&quot;,-->
+<!--                          &quot;data&quot;: {-->
+<!--                            &quot;labels&quot;: [&quot;May 1&quot;, &quot;May 2&quot;, &quot;May 3&quot;, &quot;May 4&quot;, &quot;May 5&quot;, &quot;May 6&quot;, &quot;May 7&quot;, &quot;May 8&quot;, &quot;May 9&quot;, &quot;May 10&quot;],-->
+<!--                            &quot;datasets&quot;: [{-->
+<!--                              &quot;data&quot;: [200, 300, 290, 350, 150, 350, 300, 100, 125, 220],-->
+<!--                              &quot;backgroundColor&quot;: &quot;#377dff&quot;,-->
+<!--                              &quot;hoverBackgroundColor&quot;: &quot;#377dff&quot;,-->
+<!--                              &quot;borderColor&quot;: &quot;#377dff&quot;,-->
+<!--                              &quot;maxBarThickness&quot;: &quot;10&quot;-->
+<!--                            },-->
+<!--                            {-->
+<!--                              &quot;data&quot;: [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120],-->
+<!--                              &quot;backgroundColor&quot;: &quot;#e7eaf3&quot;,-->
+<!--                              &quot;borderColor&quot;: &quot;#e7eaf3&quot;,-->
+<!--                              &quot;maxBarThickness&quot;: &quot;10&quot;-->
+<!--                            }]-->
+<!--                          },-->
+<!--                          &quot;options&quot;: {-->
+<!--                            &quot;scales&quot;: {-->
+<!--                              &quot;y&quot;: {-->
+<!--                                &quot;grid&quot;: {-->
+<!--                                  &quot;color&quot;: &quot;#e7eaf3&quot;,-->
+<!--                                  &quot;drawBorder&quot;: false,-->
+<!--                                  &quot;zeroLineColor&quot;: &quot;#e7eaf3&quot;-->
+<!--                                },-->
+<!--                                &quot;ticks&quot;: {-->
+<!--                                  &quot;beginAtZero&quot;: true,-->
+<!--                                  &quot;stepSize&quot;: 100,-->
+<!--                                  &quot;fontSize&quot;: 12,-->
+<!--                                  &quot;fontColor&quot;:  &quot;#97a4af&quot;,-->
+<!--                                  &quot;fontFamily&quot;: &quot;Open Sans, sans-serif&quot;,-->
+<!--                                  &quot;padding&quot;: 10,-->
+<!--                                  &quot;postfix&quot;: &quot;$&quot;-->
+<!--                                }-->
+<!--                              },-->
+<!--                              &quot;x&quot;: {-->
+<!--                                &quot;grid&quot;: {-->
+<!--                                  &quot;display&quot;: false,-->
+<!--                                  &quot;drawBorder&quot;: false-->
+<!--                                },-->
+<!--                                &quot;ticks&quot;: {-->
+<!--                                  &quot;fontSize&quot;: 12,-->
+<!--                                  &quot;fontColor&quot;:  &quot;#97a4af&quot;,-->
+<!--                                  &quot;fontFamily&quot;: &quot;Open Sans, sans-serif&quot;,-->
+<!--                                  &quot;padding&quot;: 5-->
+<!--                                },-->
+<!--                                &quot;categoryPercentage&quot;: 0.5,-->
+<!--                                &quot;maxBarThickness&quot;: &quot;10&quot;-->
+<!--                              }-->
+<!--                            },-->
+<!--                            &quot;cornerRadius&quot;: 2,-->
+<!--                            &quot;plugins&quot;: {-->
+<!--                              &quot;tooltip&quot;: {-->
+<!--                                &quot;prefix&quot;: &quot;$&quot;,-->
+<!--                                &quot;hasIndicator&quot;: true,-->
+<!--                                &quot;mode&quot;: &quot;index&quot;,-->
+<!--                                &quot;intersect&quot;: false-->
+<!--                              }-->
+<!--                            },-->
+<!--                            &quot;hover&quot;: {-->
+<!--                              &quot;mode&quot;: &quot;nearest&quot;,-->
+<!--                              &quot;intersect&quot;: true-->
+<!--                            }-->
+<!--                          }-->
+<!--                        }" width="1427" height="640"></canvas>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; End Bar Chart &ndash;&gt;-->
+<!--  </div>-->
+<!--  &lt;!&ndash; End Body &ndash;&gt;-->
+<!--</div>-->

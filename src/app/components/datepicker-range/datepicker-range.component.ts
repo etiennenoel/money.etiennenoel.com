@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {BaseComponent} from '../base/base.component';
 import {DateRangeInterface} from "../../interfaces/date-range.interface";
@@ -14,7 +14,7 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbInputDatepicker} from '
   standalone: false,
   styleUrl: './datepicker-range.component.scss'
 })
-export class DatepickerRangeComponent extends BaseComponent implements OnInit {
+export class DatepickerRangeComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('datepicker', { static: false }) datepicker!: NgbInputDatepicker;
   @Output() rangeSelected = new EventEmitter<DateRangeInterface>();
   hoveredDate: NgbDate | null = null;
@@ -30,6 +30,9 @@ export class DatepickerRangeComponent extends BaseComponent implements OnInit {
 
     this.fromDate = this.calendar.getToday();
     this.toDate = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
+  }
+
+  ngAfterViewInit() {
     this.emitRangeSelectedEvent();
   }
 

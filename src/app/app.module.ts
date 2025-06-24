@@ -47,6 +47,7 @@ import {DebugLogsPage} from './pages/debug-logs/debug-logs.page';
 import {LabelRepository} from './repositories/label.repository';
 import {PromptProvider} from './providers/prompt.provider';
 import {MagienoCodeEditorComponent} from '@magieno/angular-code-editor';
+import {EventStore} from './stores/event.store';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import {MagienoCodeEditorComponent} from '@magieno/angular-code-editor';
     PromptProvider,
 
     // Stores,
+    EventStore,
     ToastStore,
 
     // Services

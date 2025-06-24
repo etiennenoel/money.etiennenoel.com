@@ -2,7 +2,7 @@ import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {AdvancedFormControl} from '@magieno/angular-advanced-forms';
 import {FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {isPlatformServer} from '@angular/common';
+import {DOCUMENT, isPlatformServer} from '@angular/common';
 import {CreateExpenseOptionsJsonSchema} from '../json-schemas/create-expense-options.json-schema';
 import {LoggingService} from '@magieno/angular-core';
 
@@ -11,18 +11,23 @@ import {LoggingService} from '@magieno/angular-core';
 })
 export class PromptProvider {
 
-  imageExtractionUserPromptFormControl = new FormControl<string>(this.getImageExtractionUserPrompt());
-  imageExtractionSystemPromptFormControl = new FormControl<string>(this.getImageExtractionSystemPrompt());
-  imageExtractionJSONSchemaFormControl = new FormControl<string>(this.getImageExtractionJSONSchema());
+  imageExtractionUserPromptFormControl!: FormControl<string | null>;
+  imageExtractionSystemPromptFormControl!: FormControl<string | null>;
+  imageExtractionJSONSchemaFormControl!: FormControl<string | null>;
 
   subscriptions: Subscription[] = [];
 
   constructor(
     @Inject(PLATFORM_ID) private readonly platformId: Object,
+    @Inject(DOCUMENT) private readonly document: Document,
   ) {
     if(isPlatformServer(this.platformId)) {
       return;
     }
+
+    this.imageExtractionUserPromptFormControl = new FormControl<string>(this.getImageExtractionUserPrompt());
+    this.imageExtractionSystemPromptFormControl = new FormControl<string>(this.getImageExtractionSystemPrompt());
+    this.imageExtractionJSONSchemaFormControl = new FormControl<string>(this.getImageExtractionJSONSchema());
 
     this.subscriptions.push(this.imageExtractionSystemPromptFormControl.valueChanges.subscribe(value => {
       if(value === null) {
@@ -57,7 +62,7 @@ export class PromptProvider {
       return "";
     }
 
-    const promptOverride = window.localStorage.getItem("image_extraction_system_prompt_override");
+    const promptOverride = this.document.defaultView?.localStorage.getItem("image_extraction_system_prompt_override");
     if(promptOverride) {
       return promptOverride;
     } else {
@@ -70,7 +75,7 @@ export class PromptProvider {
       return "";
     }
 
-    const promptOverride = window.localStorage.getItem("image_extraction_user_prompt_override");
+    const promptOverride = this.document.defaultView?.localStorage.getItem("image_extraction_user_prompt_override");
     if(promptOverride) {
       return promptOverride;
     } else {
@@ -83,7 +88,7 @@ export class PromptProvider {
       return "";
     }
 
-    const jsonSchema = window.localStorage.getItem("image_extraction_json_schema_override");
+    const jsonSchema = this.document.defaultView?.localStorage.getItem("image_extraction_json_schema_override");
     if(jsonSchema) {
       return jsonSchema;
     } else {

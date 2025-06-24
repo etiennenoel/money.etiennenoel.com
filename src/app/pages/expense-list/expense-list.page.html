@@ -11,7 +11,7 @@
       <tr>
         <td>{{ expense.transactionDate | date:'shortDate' }}</td>
         <td>{{ expense.description }}</td>
-        <td>{{ expense.amount }}</td>
+        <td>{{ expense.amount / 1000 | currency:'USD': true }}</td>
         <td></td>
         <!--    <td>{{ expense.categories ? expense.categories.join(', ') : '' }}</td>-->
         <!--    <td>{{ expense.labels ? expense.labels.join(', ') : '' }}</td>-->
