@@ -8,7 +8,8 @@ import {CreateExpenseModal} from '../../components/modals/create-expense-modal/c
 import {DashboardPeriodView} from "../../interfaces/dashboard-period.view";
 import {ExpenseRepository} from "../../repositories/expense.repository";
 import {DateRangeInterface} from "../../interfaces/date-range.interface";
-import {SearchQuery, SearchFieldFilter, FilteringOperatorEnum} from "@magieno/common";
+import {SearchQuery, SearchFieldFilter, FilteringOperatorEnum, SearchResult} from "@magieno/common";
+import {DateRangeUtils} from '../../utils/date-range.utils';
 
 @Component({
   selector: 'app-index',
@@ -17,8 +18,8 @@ import {SearchQuery, SearchFieldFilter, FilteringOperatorEnum} from "@magieno/co
   styleUrl: './index.page.scss'
 })
 export class IndexPage extends BasePageComponent implements OnInit {
-  public currentPeriodDashboardView!: DashboardPeriodView;
-  public previousPeriodDashboardView!: DashboardPeriodView;
+  public currentPeriodDashboardView?: DashboardPeriodView;
+  public previousPeriodDashboardView?: DashboardPeriodView;
 
   constructor(
     @Inject(DOCUMENT) document: Document,
@@ -42,21 +43,55 @@ export class IndexPage extends BasePageComponent implements OnInit {
   }
 
   async rangeSelected(event: DateRangeInterface) {
-    // TODO: Implement range selection logic
-    console.log("Range selected:", event);
-    const searchQuery = new SearchQuery();
-    if (event.fromDate) {
-      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, event.fromDate));
+    let searchQuery = new SearchQuery();
+    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, event.fromDate));
+    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.toDate));
+
+    const results = await this.expenseRepository.search(searchQuery);
+    this.currentPeriodDashboardView = this.getDashboardPeriodView(results);
+
+    // Previous period
+    const previousPeriod = DateRangeUtils.getPreviousRange(event);
+
+    searchQuery = new SearchQuery();
+    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, previousPeriod.fromDate));
+    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, previousPeriod.toDate));
+
+    const previousResults = await this.expenseRepository.search(searchQuery);
+    this.previousPeriodDashboardView = this.getDashboardPeriodView(previousResults);
+  }
+
+  getDashboardPeriodView(searchResult: SearchResult<any>): DashboardPeriodView {
+    return {
+      numberOfTransactions: searchResult.totalNumberOfResults,
+      averageAmountPerTransaction: searchResult.results.reduce((sum, expense) => sum + expense.amount, 0) / searchResult.totalNumberOfResults,
+      totalMoneySpent: searchResult.results.reduce((sum, expense) => sum + expense.amount, 0)
     }
-    if (event.toDate) {
-      searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.toDate));
+  }
+
+  getPercentageDifference(current?: number, previous?: number) {
+    if(!current || !previous) {
+      return 0;
     }
-    console.log("SearchQuery created with filters:", searchQuery);
-    try {
-      const results = await this.expenseRepository.search(searchQuery);
-      console.log("Expense search results:", results);
-    } catch (error) {
-      console.error("Error during expense search:", error);
+
+    return ((current - previous) / previous) * 100;
+  }
+
+  getTrendDirection(current: number, previous: number) {
+    if (current > previous) {
+      return 'up';
+    } else if (current < previous) {
+      return 'down';
     }
+
+    return '';
+  }
+
+  getTrendSentiment(current: number, previous: number) {
+    if (current > previous) {
+      return 'positive';
+    }
+
+    return 'negative';
   }
 }

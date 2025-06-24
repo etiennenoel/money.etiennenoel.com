@@ -36,9 +36,9 @@
   <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
     <app-stats-card
       [title]="'Money spent'"
-      currentPeriodValue="$2,913"
-      previousPeriodValue="$1,913"
-      percentageDifference="52.3%"
+      [currentPeriodValue]="this.currentPeriodDashboardView?.totalMoneySpent | currency:'USD':true"
+      [previousPeriodValue]="this.previousPeriodDashboardView?.totalMoneySpent | currency:'USD':true"
+      [percentageDifference]="this.getPercentageDifference(this.currentPeriodDashboardView?.totalMoneySpent, this.previousPeriodDashboardView?.totalMoneySpent) + '%'"
       trendDirection="up"
       trendSentiment="negative"
     ></app-stats-card>

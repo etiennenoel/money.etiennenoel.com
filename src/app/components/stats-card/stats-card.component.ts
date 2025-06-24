@@ -18,13 +18,13 @@ export class StatsCardComponent extends BaseComponent implements OnInit {
   title: string = '';
 
   @Input()
-  currentPeriodValue: string = '';
+  currentPeriodValue: string|null = '';
 
   @Input()
-  previousPeriodValue: string = '';
+  previousPeriodValue: string|null = '';
 
   @Input()
-  percentageDifference: string = '';
+  percentageDifference: string|null = '';
 
   @Input()
   trendDirection?: 'up' | 'down';
