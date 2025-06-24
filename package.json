@@ -21,7 +21,7 @@
     "@angular/platform-server": "^19.0.0",
     "@angular/router": "^19.0.0",
     "@angular/ssr": "^19.0.2",
-    "@magieno/angular-advanced-forms": "^0.0.43",
+    "@magieno/angular-advanced-forms": "^0.0.44",
     "@magieno/angular-advanced-table": "^0.0.11",
     "@magieno/angular-code-editor": "^0.0.8",
     "@magieno/angular-core": "^0.0.37",

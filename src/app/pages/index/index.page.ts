@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, isPlatformServer} from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import {BasePageComponent} from '../../components/base/base-page.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,7 @@ import {ExpenseRepository} from "../../repositories/expense.repository";
 import {DateRangeInterface} from "../../interfaces/date-range.interface";
 import {SearchQuery, SearchFieldFilter, FilteringOperatorEnum, SearchResult} from "@magieno/common";
 import {DateRangeUtils} from '../../utils/date-range.utils';
+import {EventStore} from '../../stores/event.store';
 
 @Component({
   selector: 'app-index',
@@ -21,12 +22,16 @@ export class IndexPage extends BasePageComponent implements OnInit {
   public currentPeriodDashboardView?: DashboardPeriodView;
   public previousPeriodDashboardView?: DashboardPeriodView;
 
+  selectedDateRange?: DateRangeInterface;
+
   constructor(
     @Inject(DOCUMENT) document: Document,
+    @Inject(PLATFORM_ID) private readonly platformId: Object,
     protected readonly route: ActivatedRoute,
     protected readonly router: Router,
     protected readonly ngbModal: NgbModal,
     private readonly expenseRepository: ExpenseRepository,
+    private readonly eventStore: EventStore,
     title: Title,
   ) {
     super(document, title);
@@ -36,6 +41,10 @@ export class IndexPage extends BasePageComponent implements OnInit {
     super.ngOnInit();
 
     this.setTitle("Trunk Track")
+
+    this.subscriptions.push(this.eventStore.expenseCreatedOrModified.subscribe(() => {
+      this.refresh();
+    }))
   }
 
   openNewExpenseModal() {
@@ -43,15 +52,28 @@ export class IndexPage extends BasePageComponent implements OnInit {
   }
 
   async rangeSelected(event: DateRangeInterface) {
+    if(isPlatformServer(this.platformId)) {
+      return;
+    }
+
+    this.selectedDateRange = event;
+    this.refresh();
+  }
+
+  async refresh() {
+    if(!this.selectedDateRange) {
+      return;
+    }
+
     let searchQuery = new SearchQuery();
-    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, event.fromDate));
-    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, event.toDate));
+    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, this.selectedDateRange.fromDate));
+    searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.LessThanOrEqual, this.selectedDateRange.toDate));
 
     const results = await this.expenseRepository.search(searchQuery);
     this.currentPeriodDashboardView = this.getDashboardPeriodView(results);
 
     // Previous period
-    const previousPeriod = DateRangeUtils.getPreviousRange(event);
+    const previousPeriod = DateRangeUtils.getPreviousRange(this.selectedDateRange);
 
     searchQuery = new SearchQuery();
     searchQuery.addFilter(new SearchFieldFilter('transactionDate', FilteringOperatorEnum.GreaterThanOrEqual, previousPeriod.fromDate));
@@ -64,17 +86,17 @@ export class IndexPage extends BasePageComponent implements OnInit {
   getDashboardPeriodView(searchResult: SearchResult<any>): DashboardPeriodView {
     return {
       numberOfTransactions: searchResult.totalNumberOfResults,
-      averageAmountPerTransaction: searchResult.results.reduce((sum, expense) => sum + expense.amount, 0) / searchResult.totalNumberOfResults,
-      totalMoneySpent: searchResult.results.reduce((sum, expense) => sum + expense.amount, 0)
+      averageAmountPerTransaction: searchResult.totalNumberOfResults === 0 ? 0 : searchResult.results.reduce((sum, expense) => sum + expense.amount, 0) / (searchResult.totalNumberOfResults * 100),
+      totalMoneySpent: searchResult.results.reduce((sum, expense) => sum + expense.amount, 0) / 100,
     }
   }
 
   getPercentageDifference(current?: number, previous?: number) {
-    if(!current || !previous) {
+    if (!current || !previous) {
       return 0;
     }
 
-    return ((current - previous) / previous) * 100;
+    return Math.floor(((current - previous) / previous) * 100);
   }
 
   getTrendDirection(current: number, previous: number) {
@@ -84,14 +106,16 @@ export class IndexPage extends BasePageComponent implements OnInit {
       return 'down';
     }
 
-    return '';
+    return 'flat';
   }
 
-  getTrendSentiment(current: number, previous: number) {
+  getTrendSentiment(current: number, previous: number, isUpwardsTrendPositive = true) {
     if (current > previous) {
-      return 'positive';
+      return isUpwardsTrendPositive ? 'positive' : 'negative';
+    } else if (current < previous) {
+      return isUpwardsTrendPositive ? 'negative' : 'positive';
     }
 
-    return 'negative';
+    return 'neutral';
   }
 }

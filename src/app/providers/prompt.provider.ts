@@ -11,9 +11,9 @@ import {LoggingService} from '@magieno/angular-core';
 })
 export class PromptProvider {
 
-  imageExtractionUserPromptFormControl = new FormControl<string>(this.getImageExtractionUserPrompt());
-  imageExtractionSystemPromptFormControl = new FormControl<string>(this.getImageExtractionSystemPrompt());
-  imageExtractionJSONSchemaFormControl = new FormControl<string>(this.getImageExtractionJSONSchema());
+  imageExtractionUserPromptFormControl!: FormControl<string | null>;
+  imageExtractionSystemPromptFormControl!: FormControl<string | null>;
+  imageExtractionJSONSchemaFormControl!: FormControl<string | null>;
 
   subscriptions: Subscription[] = [];
 
@@ -24,6 +24,10 @@ export class PromptProvider {
     if(isPlatformServer(this.platformId)) {
       return;
     }
+
+    this.imageExtractionUserPromptFormControl = new FormControl<string>(this.getImageExtractionUserPrompt());
+    this.imageExtractionSystemPromptFormControl = new FormControl<string>(this.getImageExtractionSystemPrompt());
+    this.imageExtractionJSONSchemaFormControl = new FormControl<string>(this.getImageExtractionJSONSchema());
 
     this.subscriptions.push(this.imageExtractionSystemPromptFormControl.valueChanges.subscribe(value => {
       if(value === null) {

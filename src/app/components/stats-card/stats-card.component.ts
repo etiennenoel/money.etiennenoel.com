@@ -27,10 +27,10 @@ export class StatsCardComponent extends BaseComponent implements OnInit {
   percentageDifference: string|null = '';
 
   @Input()
-  trendDirection?: 'up' | 'down';
+  trendDirection?: 'up' | 'down' | 'flat';
 
   @Input()
-  trendSentiment?: "positive" | "negative"
+  trendSentiment?: "positive" | "negative" | "neutral"
 
   constructor(
     @Inject(DOCUMENT) document: Document,
