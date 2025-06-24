@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {Expense} from '../../interfaces/expense.interface';
 import {ExpenseRepository} from '../../repositories/expense.repository';
 import {MagienoAdvancedTableColumnInterface, TableStateEnum} from '@magieno/angular-advanced-table';
-import {SearchQuery, SearchResult} from '@magieno/common';
+import {SearchQuery, SearchResult, SortOrderEnum} from '@magieno/common';
 import {isPlatformServer} from '@angular/common';
 
 @Component({
@@ -33,7 +33,7 @@ export class ExpenseListPage implements OnInit {
     },
   ]
 
-  searchQuery: SearchQuery = new SearchQuery();
+  searchQuery: SearchQuery
 
   tableState: TableStateEnum = TableStateEnum.Loaded;
 
@@ -43,6 +43,11 @@ export class ExpenseListPage implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private readonly expenseRepository: ExpenseRepository,
   ) {
+    this.searchQuery = new SearchQuery({
+
+    });
+
+    this.searchQuery.setSort("transactionDate", SortOrderEnum.Descending)
   }
 
   async ngOnInit(): Promise<void> {
