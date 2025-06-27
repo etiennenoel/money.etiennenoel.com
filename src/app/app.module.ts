@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import {BaseComponent} from './components/base/base.component';
 import {BasePageComponent} from './components/base/base-page.component';
 import {LayoutComponent} from './components/layout/layout.component';
-import {RootComponent} from './components/root/root.component';
 import {IndexPage} from './pages/index/index.page';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastStore} from './stores/toast.store';
@@ -20,7 +19,12 @@ import {StatsCardComponent} from './components/stats-card/stats-card.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {DatepickerRangeComponent} from './components/datepicker-range/datepicker-range.component';
 import {CreateExpenseModal} from './components/modals/create-expense-modal/create-expense.modal';
-import {MagienoCoreModule} from '@magieno/angular-core';
+import {
+  LifecycleListenerInterface,
+  LifecycleListenerInterfaceToken,
+  MagienoCoreModule,
+  RootComponent
+} from '@magieno/angular-core';
 import {MagienoAdvancedFormsModule} from '@magieno/angular-advanced-forms';
 import {provideTranslateService, TranslateModule} from '@ngx-translate/core';
 import {CategoriesProvider} from './providers/categories.provider';
@@ -48,11 +52,11 @@ import {LabelRepository} from './repositories/label.repository';
 import {PromptProvider} from './providers/prompt.provider';
 import {MagienoCodeEditorComponent} from '@magieno/angular-code-editor';
 import {EventStore} from './stores/event.store';
+import {ApplicationStateLifecycleListener} from './lifecycle-listeners/application-state.lifecycle-listener';
 
 @NgModule({
   declarations: [
     LayoutComponent,
-    RootComponent,
 
     SidebarComponent,
     ToastComponent,
@@ -120,6 +124,11 @@ import {EventStore} from './stores/event.store';
     {
       provide: DataMapper,
       useValue: new DataMapper(new AutoDataMappingBuilder(), [new StringNormalizer(), new DateNormalizer(), new NumberNormalizer()], []),
+    },
+    {
+      provide: LifecycleListenerInterfaceToken,
+      useClass: ApplicationStateLifecycleListener,
+       multi: true
     },
   ],
   bootstrap: [RootComponent]

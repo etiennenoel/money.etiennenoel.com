@@ -8,8 +8,9 @@ import {ImportStatementStateEnum} from '../../enums/import-statement-state.enum'
 import { StatementImporter } from '../../importers/statement.importer';
 import { CreateExpenseOptions } from '../../options/create-expense.options';
 import {PreviewData} from '../../types/preview-data.type';
-import {LoggingService} from '@magieno/angular-core';
+import {ApplicationStateService, LoggingService} from '@magieno/angular-core';
 import {PromptProvider} from '../../providers/prompt.provider';
+import {ApplicationStateParameterEnum} from '../../enums/application-state-parameter.enum';
 
 @Component({
   selector: 'app-import-statement',
@@ -36,6 +37,7 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     private readonly statementImporter: StatementImporter,
     private readonly loggingService: LoggingService,
     protected readonly promptProvider: PromptProvider,
+    private readonly applicationState: ApplicationStateService,
   ) {
     super(document, title);
   }
@@ -44,11 +46,14 @@ export class ImportStatementPage extends BasePageComponent implements OnInit {
     super.ngOnInit();
     this.setTitle("Import Statement");
 
-    this.debugCollapsed = localStorage.getItem("import_statement_debug_collapsed") === "true";
+    this.registerSubscription(this.applicationState.getState<boolean>(ApplicationStateParameterEnum.DebugPanelCollapsedImportStatement)?.subscribe((value: boolean) => {
+      this.debugCollapsed = value;
+    }))
+
   }
 
   debugCollapsedChange() {
-    localStorage.setItem("import_statement_debug_collapsed", this.debugCollapsed ? "true" : "false")
+    this.applicationState.updateState(ApplicationStateParameterEnum.DebugPanelCollapsedImportStatement, this.debugCollapsed);
   }
 
   async onFileSystemHandlesDropped(fileSystemHandles: FileSystemHandle[]) {

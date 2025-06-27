@@ -3,7 +3,8 @@ import { ServerModule } from '@angular/platform-server';
 import { provideServerRoutesConfig } from '@angular/ssr';
 import { AppModule } from './app.module';
 import { serverRoutes } from './app.routes.server';
-import {RootComponent} from './components/root/root.component';
+import {IndexPage} from './pages/index/index.page';
+import {RootComponent} from '@magieno/angular-core';
 
 @NgModule({
   imports: [AppModule, ServerModule],

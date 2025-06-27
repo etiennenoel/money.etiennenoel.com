@@ -19,4 +19,10 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  registerSubscription(subscription?: Subscription) {
+    if (subscription) {
+      this.subscriptions.push(subscription);
+    }
+  }
 }
